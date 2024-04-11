@@ -1,0 +1,14 @@
+services:
+  server:
+    container_name: PRM-Server
+    hostname: prm-server
+    restart: unless-stopped
+    build: server
+    ports:
+      - 3001:3001
+  web:
+    container_name: PRM-Web
+    restart: unless-stopped
+    build: web
+    ports:
+      - 2323:3000    
