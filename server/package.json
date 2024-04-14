@@ -2,7 +2,7 @@
   "name": "sveltekit-express-template",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "exports": "src/server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,8 +13,7 @@
   "author": "",
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "express": "^4.19.2",
-    "sirv": "^2.0.4"
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

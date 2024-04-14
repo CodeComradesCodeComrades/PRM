@@ -1,20 +1,20 @@
 import express from "express";
-import sirv from 'sirv';
-import { existsSync, fstat } from 'fs'
+import fs from 'fs'
+
 
 const app = express();
 const port = 3001;
 
-async function start() {
-  if (existsSync("../svelte/build/handler.js") && process.env.NODE_ENV == "Production") {
-    let { handler } = await import("../../svelte/build/handler.js")
-    app.use(handler);
+
+export default function start() {
+  if (fs.existsSync("../svelte/build/handler.mjs") && process.env.NODE_ENV == "production") {
+    import("../../svelte/build/handler.mjs").then(({ handler }) => {
+      app.use(handler);
+    })
   }
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
   })
-
 }
-
 start();
