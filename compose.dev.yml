@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 services:
   server:
     container_name: PRM-Server
@@ -12,3 +13,37 @@ services:
     build: web
     ports:
       - 2323:3000    
+=======
+services:
+  server:
+    container_name: PRM-Server
+    hostname: prm-server
+    restart: unless-stopped
+    build:
+      target: server-dev
+    ports:
+      - 3001:3001
+    volumes:
+      - ./server:/usr/src/app/server
+      - /usr/src/app/server/node_modules
+  web:
+    container_name: PRM-Web
+    restart: unless-stopped
+    build:
+      target: web
+    ports:
+      - 2323:3000
+    command: npm run dev
+    volumes:
+      - ./web:/usr/src/app/web
+      - /usr/src/app/web/node_modules
+  postgres:
+    image: "postgres:14.5"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+      POSTGRES_DB: "test"
+    container_name: PRM-Postgres
+>>>>>>> 0657227... Fabis Gedöns

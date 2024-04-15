@@ -1,0 +1,17 @@
+services:
+  server:
+    container_name: PRM-Server
+    hostname: prm-server
+    restart: unless-stopped
+    build: .
+    ports:
+      - 3001:3001
+  postgres:
+    image: "postgres:14.5"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+      POSTGRES_DB: "test"
+    container_name: PRM-Postgres
