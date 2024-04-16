@@ -3,21 +3,41 @@ services:
     container_name: PRM-Server
     hostname: prm-server
     restart: unless-stopped
-    build:
-      target: server-dev
+    build: 
+      context: server
+      target: dev
     ports:
       - 3001:3001
     volumes:
-      - ./server:/usr/src/app/server
+      - ./server/src:/usr/src/app/server/src
       - /usr/src/app/server/node_modules
+    env_file:
+      - .env
   web:
     container_name: PRM-Web
     restart: unless-stopped
     build:
-      target: web
+      context: web
+      target: dev
+    env_file:
+      - .env
     ports:
       - 2323:3000
     command: npm run dev
     volumes:
       - ./web:/usr/src/app/web
       - /usr/src/app/web/node_modules
+  database:
+    hostname: postgres
+    container_name: PRM-Postgres
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
