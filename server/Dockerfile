@@ -1,18 +1,22 @@
-# Basis-Image
-FROM node:16-alpine
+# dev build
+FROM node:20 as dev
 
-# Arbeitsverzeichnis für das Backend festlegen
+
 WORKDIR /usr/src/app/server
-
-# Kopiere die Backend-Dateien und installiere die Abhängigkeiten
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Kopiere den restlichen Backend-Code
-COPY . .
+COPY . ./
 
-# Setze das Arbeitsverzeichnis zurück zum Server
-WORKDIR /usr/src/app/server
+CMD npm run start:debug
+ENV NODE_ENV=development
 
-# Startbefehl
-CMD ["npm", "run", "dev"]
+FROM dev AS prod
+
+RUN npm ci
+RUN npm run build
+RUN npm prune --omit=dev --omit=optional
+ENV NODE_ENV=production
+
+
+CMD "npm run start" 

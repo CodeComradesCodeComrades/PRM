@@ -1,12 +1,12 @@
-# Basis-Image
-FROM node:18-alpine as web
+FROM node:18-alpine as dev
 WORKDIR /usr/src/app/web
 
 COPY package*.json ./
 RUN npm ci
 
 COPY . .
+CMD [ "npm", "run", "dev" ]
 
-ENV NODE_ENV=development
-
-CMD ["npm", "run", "dev"]
+FROM web as prod
+RUN npm run build
+RUN mv build/handler.js build/handler.mjs
