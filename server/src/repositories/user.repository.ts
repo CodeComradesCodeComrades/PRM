@@ -16,13 +16,14 @@ export class UserRepository implements IUserRepository {
         });
     }
 
-    async getByEmail(email: string): Promise<UserEntity | null> {
-        const user = this.userRepository.findOne({
-            where: {
-                email: email,
-            },
-        });
-        return user;
+    async getByEmail(email: string, withPassword?: boolean): Promise<UserEntity | null> {
+        let builder = this.userRepository.createQueryBuilder('user').where({ email });
+
+        if (withPassword) {
+            builder = builder.addSelect('user.password');
+        }
+
+        return builder.getOne();
     }
 
     async create(user: Partial<UserEntity>): Promise<UserEntity> {

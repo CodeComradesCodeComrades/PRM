@@ -6,7 +6,7 @@ import {
     InternalServerErrorException,
     NestInterceptor,
 } from '@nestjs/common';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { PRMLogger } from 'src/utils/logger';
 import { isConnectionAborted, routeToErrorMessage } from 'src/utils/misc';
 

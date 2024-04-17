@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserCore } from 'src/core/user.core';
-import { CreateUserDto, mapUser, UserDto } from 'src/dto/user.dto';
+import { CreateUserDto, UserDto, mapUser } from 'src/dto/user.dto';
 import { ICryptoRepository } from 'src/interfaces/crypto.interface';
 import { IUserRepository } from 'src/interfaces/user.interface';
 

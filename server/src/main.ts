@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { json } from 'body-parser';
+import cookieParser from 'cookie-parser';
 import 'reflect-metadata';
 import { ApiModule } from 'src/app.module';
-import { envName, serverVersion } from 'src/constants';
+import { envName, isDev, serverVersion } from 'src/constants';
+import { swagger } from 'src/utils/api';
 import { PRMLogger } from 'src/utils/logger';
 
 async function bootstrap() {
@@ -14,8 +16,13 @@ async function bootstrap() {
         bufferLogs: true,
     });
 
+    if (isDev) {
+        swagger(app);
+    }
+
     app.useLogger(app.get(PRMLogger));
     app.use(json({ limit: '10mb' }));
+    app.use(cookieParser());
 
     app.setGlobalPrefix('api');
 
