@@ -5,8 +5,8 @@
       "type": "node",
       "request": "attach",
       "restart": true,
-      "port": 9229,
-      "name": "Immich Server",
+      "port": 5000,
+      "name": "PRM Server",
       "remoteRoot": "/usr/src/app/server",
       "localRoot": "${workspaceFolder}/server"
     }
