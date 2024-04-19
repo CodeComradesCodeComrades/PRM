@@ -32,7 +32,7 @@ const middleware = [
         provide: APP_PIPE,
         useValue: new ValidationPipe({ transform: true, whitelist: true }),
     },
-    // { provide: APP_INTERCEPTOR, useClass: ErrorInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: ErrorInterceptor },
     { provide: APP_GUARD, useClass: AuthGuard },
 ];
 
