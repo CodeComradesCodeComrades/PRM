@@ -3,8 +3,8 @@ import cookieParser from 'cookie';
 import { response } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { DateTime } from 'luxon';
-import { ACCESS_COOKIE } from 'src/constants';
-import { AuthCredentialDto, AuthDto, LoginResponseDto, mapLoginResponse } from 'src/dto/auth.dto';
+import { ACCESS_COOKIE, LOGIN_URL } from 'src/constants';
+import { AuthCredentialDto, AuthDto, LoginResponseDto, LogoutResponseDto, mapLoginResponse } from 'src/dto/auth.dto';
 import { UserEntity } from 'src/entities/user.entity';
 import { ICryptoRepository } from 'src/interfaces/crypto.interface';
 import { IDatabaseRepository } from 'src/interfaces/database.interface';
@@ -32,6 +32,16 @@ export class AuthService {
             throw new UnauthorizedException('Incorrect login details');
         }
         return this.createLoginResponse(user, loginDetails);
+    }
+
+    async logout(authDto: AuthDto): Promise<LogoutResponseDto> {
+        if (authDto.userToken) {
+            await this.sessionRepository.delete(authDto.userToken.userId);
+        }
+
+        return {
+            loggedOut: true,
+        };
     }
 
     private checkPassword(password: string, user: UserEntity): boolean {

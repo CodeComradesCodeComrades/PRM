@@ -6,6 +6,9 @@ export class SessionEntity {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
+    @Column()
+    userId!: string;
+
     @ManyToOne(() => UserEntity, {
         cascade: true,
     })

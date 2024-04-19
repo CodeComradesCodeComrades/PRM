@@ -22,4 +22,8 @@ export class SessionRepository implements ISessionRepository {
         const { id } = await this.sessionRepository.save(user);
         return this.sessionRepository.findOneOrFail({ where: { id }, withDeleted: true });
     }
+
+    async delete(id: string): Promise<void> {
+        await this.sessionRepository.delete({ id });
+    }
 }

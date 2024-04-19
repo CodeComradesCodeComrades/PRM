@@ -12,3 +12,4 @@ export const SALT_ROUNDS = 10;
 export const PROJECT_NAME = 'PRM';
 
 export const ACCESS_COOKIE = 'access_token';
+export const LOGIN_URL = '/login';

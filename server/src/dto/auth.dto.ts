@@ -24,6 +24,10 @@ export class LoginResponseDto {
     name!: string;
 }
 
+export class LogoutResponseDto {
+    loggedOut!: boolean;
+}
+
 export function mapLoginResponse(entity: UserEntity, accessToken: string): LoginResponseDto {
     return {
         accessToken: accessToken,
