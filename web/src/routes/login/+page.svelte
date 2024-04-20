@@ -60,11 +60,7 @@
     resetButton();
   }
 
-  function resetButton() {
-    setTimeout(() => {
-      animateLoginButton = false;
-    }, 1000);
-  }
+
 </script>
 
 <main>
