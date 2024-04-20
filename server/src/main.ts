@@ -23,6 +23,7 @@ async function bootstrap() {
     app.useLogger(app.get(PRMLogger));
     app.use(json({ limit: '10mb' }));
     app.use(cookieParser());
+    app.enableCors();
 
     app.setGlobalPrefix('api');
     if (isDev) {
