@@ -25,6 +25,9 @@ async function bootstrap() {
     app.use(cookieParser());
 
     app.setGlobalPrefix('api');
+    if (isDev) {
+        app.enableCors({ credentials: true });
+    }
 
     const server = await app.listen(port);
     server.requestTimeout = 30 * 60 * 1000;
