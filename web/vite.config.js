@@ -2,7 +2,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 const upstream = {
-	target: process.env.prm_SERVER_URL || 'http://prm-server:3001/',
+	target: process.env.SERVER_URL || 'http://127.0.0.1:3001/',
 	secure: true,
 	changeOrigin: true,
 	logLevel: 'info',

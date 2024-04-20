@@ -1,8 +1,15 @@
 <script>
   import LoadingDots from "$lib/LoadingDots.svelte";
+  import { env } from "$env/dynamic/public";
+
+  const hosturl = env.SERVER_URL || "";
 
   let animateLoginButton = false;
   let loginState = "idle";
+
+  let username = "";
+  let password = "";
+
   /* Info: Login-States
   processing = login currently happening
   internal_error = server HTTP/500
@@ -15,32 +22,49 @@
     animateLoginButton = true;
     loginState = "processing";
 
+    const loginres = await fetch(hosturl + "/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: username, //this changes to "username" later after Issue
+        password: password,
+      }),
+    });
+
+    console.log(loginres);
   }
-
-
 </script>
 
 <main>
-
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+  />
   <div class="loginbox">
-
     <div>
-    <p class="login-header roboto">Log in</p>
+      <p class="login-header roboto">Log in</p>
     </div>
 
     <div class="user-box">
       <div class="feedback-head">
         <p class="login-name roboto">Email or Username</p>
-        
       </div>
       {#if loginState == "inv_name"}
         <p class="user-feedback roboto">Invalid Email or Username</p>
         <i class="red user-icon fas fa-user"></i>
       {:else}
-      <i class="user-icon fas fa-user"></i>
+        <i class="user-icon fas fa-user"></i>
       {/if}
-      <input type="text" id="userfield" name="userfield" placeholder="Email or Username" class="form-field user-field roboto">
+      <input
+        type="text"
+        id="userfield"
+        name="userfield"
+        placeholder="Email or Username"
+        class="form-field user-field roboto"
+        bind:value={username}
+      />
     </div>
 
     <div class="pw-box">
@@ -56,14 +80,21 @@
       {:else}
         <i class="pw-icon fas fa-lock"></i>
       {/if}
-      <input type="password" id="pwfield" name="pwfield" placeholder="Password" class="form-field pw-field roboto">
+      <input
+        type="password"
+        id="pwfield"
+        name="pwfield"
+        placeholder="Password"
+        class="form-field pw-field roboto"
+        bind:value={password}
+      />
     </div>
-      {#if animateLoginButton}
-          <button class="hide-text login-button roboto">Login</button>
-          <div class="login-loader"><LoadingDots/></div>
-      {:else}
-        <button class="login-button roboto" on:click={handleLogin}>Login</button>
-      {/if}
+    {#if animateLoginButton}
+      <button class="hide-text login-button roboto">Login</button>
+      <div class="login-loader"><LoadingDots /></div>
+    {:else}
+      <button class="login-button roboto" on:click={handleLogin}>Login</button>
+    {/if}
 
     <div>
       {#if loginState == "internal_error"}
@@ -74,13 +105,10 @@
     </div>
 
     <p class="credits roboto">Made by DaFeist & Fllooo</p>
-
   </div>
-
 </main>
 
 <style>
-
   .credits {
     color: white;
     text-align: right;
@@ -230,9 +258,8 @@
   }
 
   .roboto {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
   }
-
 </style>
