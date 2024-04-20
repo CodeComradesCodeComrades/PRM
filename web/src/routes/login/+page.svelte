@@ -1,6 +1,7 @@
 <script>
   import LoadingDots from "$lib/LoadingDots.svelte";
   import { env } from "$env/dynamic/public";
+  import { goto } from "$app/navigation";
 
   const hosturl = env.SERVER_URL || "";
 
@@ -14,7 +15,7 @@
   processing = login currently happening
   internal_error = server HTTP/500
   timeout = cannot connect to server
-  inv_name = wrong username/mail
+  inv_name = invalid username/mail
   inv_pass = wrong password
   */
 
@@ -33,7 +34,36 @@
       }),
     });
 
-    console.log(loginres);
+    if (loginres.ok) {
+      goto("/");
+    } else {
+      const loginresjson = await loginres.json();
+
+      if (
+        loginresjson.message[0] == "email must be an email" ||
+        loginresjson.message[0] == "email should not be empty"
+      ) {
+        loginState = "inv_name";
+      } else if (
+        loginresjson.message[0] == "password should not be empty" ||
+        loginresjson.message[0] == "Incorrect login details"
+      ) {
+        loginState = "inv_pass";
+      } else if (loginres.status == 500) {
+        loginState = "internal_error";
+      }
+
+      username = "";
+      password = "";
+    }
+
+    resetButton();
+  }
+
+  function resetButton() {
+    setTimeout(() => {
+      animateLoginButton = false;
+    }, 1000);
   }
 </script>
 
