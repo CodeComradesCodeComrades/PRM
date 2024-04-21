@@ -29,7 +29,7 @@
   }
 
   .bar-container {
-    background-color: rgb(32, 32, 32);
+    background-color: rgb(32, 32, 44);
     width: 16vw;
     height: 100vh;
     position: fixed;
