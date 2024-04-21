@@ -2,9 +2,6 @@
     import Sidebar from "$lib/Sidebar.svelte";
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>
-    Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
+<h1 style="color: white;">This is the navbar</h1>
 
 <Sidebar />
