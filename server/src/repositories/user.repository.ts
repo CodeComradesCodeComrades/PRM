@@ -26,6 +26,16 @@ export class UserRepository implements IUserRepository {
         return builder.getOne();
     }
 
+    async getByName(name: string, withPassword?: boolean): Promise<UserEntity | null> {
+        let builder = this.userRepository.createQueryBuilder('user').where({ name });
+
+        if (withPassword) {
+            builder = builder.addSelect('user.password');
+        }
+
+        return builder.getOne();
+    }
+
     async create(user: Partial<UserEntity>): Promise<UserEntity> {
         return this.save(user);
     }

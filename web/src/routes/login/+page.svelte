@@ -23,15 +23,26 @@
     animateLoginButton = true;
     loginState = "processing";
 
+    var loginbody;
+
+    if (validateEmail(username)) {
+      loginbody = JSON.stringify({
+        email: username,
+        password: password,
+      });
+    } else {
+      loginbody = JSON.stringify({
+        name: username,
+        password: password,
+      });
+    }
+
     const loginres = await fetch(hosturl + "/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        email: username, //this changes to "username" later after Issue
-        password: password,
-      }),
+      body: loginbody,
     });
 
     if (loginres.ok) {
@@ -41,12 +52,13 @@
 
       if (
         loginresjson.message[0] == "email must be an email" ||
-        loginresjson.message[0] == "email should not be empty"
+        loginresjson.message[0] == "email should not be empty" ||
+        loginresjson.message[0] == "name should not be empty"
       ) {
         loginState = "inv_name";
       } else if (
         loginresjson.message[0] == "password should not be empty" ||
-        loginresjson.message[0] == "Incorrect login details"
+        loginresjson.message == "Incorrect login details"
       ) {
         loginState = "inv_pass";
       } else if (loginres.status == 500) {
@@ -60,7 +72,16 @@
     resetButton();
   }
 
+  function resetButton() {
+    setTimeout(() => {
+      animateLoginButton = false;
+    }, 1000);
+  }
 
+  function validateEmail(email) {
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  }
 </script>
 
 <main>

@@ -21,7 +21,14 @@ export class AuthService {
     ) {}
 
     async login(dto: AuthCredentialDto, loginDetails: LoginDetails): Promise<LoginResponse> {
-        let user = await this.userRepository.getByEmail(dto.email, true);
+        let user: UserEntity;
+
+        if(dto.email) {
+            user = await this.userRepository.getByEmail(dto.email, true);
+        } else if(dto.name) {
+            user = await this.userRepository.getByName(dto.name, true);
+        }
+        
         if (user) {
             if (!this.checkPassword(dto.password, user)) {
                 user = null;

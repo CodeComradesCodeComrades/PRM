@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsOptional} from 'class-validator';
 import { SessionEntity } from 'src/entities/sessions.entity';
 import { UserEntity } from 'src/entities/user.entity';
 import { toEmail } from 'src/validation';
@@ -10,7 +10,14 @@ export class AuthCredentialDto {
     @ApiProperty({ example: 'testuser@email.com' })
     @IsNotEmpty()
     @Transform(toEmail)
+    @IsOptional()
     email!: string;
+
+    @ApiPropertyOptional()
+    @ApiProperty({ example: 'testuser' })
+    @IsNotEmpty()
+    @IsOptional()
+    name!: string;
 
     @IsNotEmpty()
     @IsString()
