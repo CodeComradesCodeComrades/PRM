@@ -1,0 +1,65 @@
+name: Test
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generated-typeorm-migrations-up-to-date:
+    name: TypeORM Checks
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: prm
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    defaults:
+      run:
+        working-directory: ./server
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install server dependencies
+        run: npm ci
+
+      - name: Build the app
+        run: npm run build
+
+      - name: Run existing migrations
+        run: npm run typeorm:migrations:run
+
+      - name: Test npm run schema:reset command works
+        run: npm run typeorm:schema:reset
+
+      - name: Generate new migrations
+        continue-on-error: true
+        run: npm run typeorm:migrations:generate ./src/migrations/TestMigration
+
+      - name: Find file changes
+        uses: tj-actions/verify-changed-files@v19
+        id: verify-changed-files
+        with:
+          files: |
+            server/src/migrations/
+      - name: Verify migration files have not changed
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          echo "ERROR: Generated migration files not up to date!"
+          echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
+          exit 1
