@@ -8,12 +8,11 @@
 <slot />
 
 <style>
+  :global(body) {
+    background-color: rgb(10, 10, 10);
+  }
 
-:global(body) {
-  background-color: rgb(10, 10, 10);
-}
-
-/*Roboto-Fonts here
+  /*Roboto-Fonts here
 
 .roboto-thin {
   font-family: "Roboto", sans-serif;
@@ -79,6 +78,5 @@
   font-family: "Roboto", sans-serif;
   font-weight: 900;
   font-style: italic;
-}
-
+}*/
 </style>
