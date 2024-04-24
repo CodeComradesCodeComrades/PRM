@@ -1,7 +1,7 @@
 <script>
+    import Navbar from "$lib/Navbar.svelte";
     import Sidebar from "$lib/Sidebar.svelte";
 </script>
 
-<h1 style="color: white;">This is the navbar</h1>
-
+<Navbar />
 <Sidebar />

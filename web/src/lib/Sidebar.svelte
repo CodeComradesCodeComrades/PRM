@@ -103,7 +103,8 @@
   .bar-container {
     background-color: rgb(32, 32, 44);
     width: 16vw;
-    height: 100vh;
+    height: 96vh;
+    top: 7vh;
     position: fixed;
     left: 0px;
     border-bottom-right-radius: 16px;
@@ -116,5 +117,11 @@
     font-family: "Roboto", sans-serif;
     font-weight: 400;
     font-style: normal;
+  }
+
+  @media (min-width: 2400px) {
+    .bar-container {
+      top: 6vh;
+    }
   }
 </style>
