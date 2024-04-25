@@ -1,7 +1,11 @@
 <script>
   import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
 
   let currentTab = "home";
+  let path = $page.url.pathname;
+
+  if (path == "/diary") currentTab = "diary";
 </script>
 
 <div class="roboto bar-container">
@@ -10,7 +14,10 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
     class="bar-element {currentTab === 'home' ? 'selected' : ''}"
-    on:click={() => (currentTab = "home")}
+    on:click={() => {
+      currentTab = "home";
+      goto("/");
+    }}
     role="button"
   >
     <svg
