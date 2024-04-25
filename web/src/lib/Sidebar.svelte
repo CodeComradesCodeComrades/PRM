@@ -1,4 +1,6 @@
 <script>
+  import { goto } from "$app/navigation";
+
   let currentTab = "home";
 </script>
 
@@ -37,7 +39,10 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div
     class="bar-element {currentTab === 'diary' ? 'selected' : ''}"
-    on:click={() => (currentTab = "diary")}
+    on:click={() => {
+      currentTab = "diary";
+      goto("/diary");
+    }}
     role="button"
   >
     <svg
