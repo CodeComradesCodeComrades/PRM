@@ -1,7 +1,5 @@
 <script>
-    import Navbar from "$lib/Navbar.svelte";
-    import Sidebar from "$lib/Sidebar.svelte";
+    import UserPageLayout from "$lib/UserPageLayout.svelte";
 </script>
 
-<Navbar />
-<Sidebar />
+<UserPageLayout></UserPageLayout>
