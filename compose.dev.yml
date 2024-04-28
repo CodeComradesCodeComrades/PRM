@@ -25,6 +25,8 @@ services:
     ports:
       - 2323:3000
     command: npm run dev
+    environment:
+      - SERVER_URL=http://prm-server:3001
     volumes:
       - ./web:/usr/src/app/web
       - /usr/src/app/web/node_modules
