@@ -1,0 +1,26 @@
+{
+  "name": "@prm/sdk",
+  "version": "0.0.1",
+  "description": "Auto-generated TypeScript SDK",
+  "type": "module",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "license": "GNU Affero General Public License version 3",
+  "dependencies": {
+    "@oazapfts/runtime": "^1.0.2",
+    "@openapitools/openapi-generator-cli": "^2.13.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3"
+  }
+}

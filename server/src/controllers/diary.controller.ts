@@ -6,8 +6,8 @@ import { Auth, Authenticated } from 'src/middlewares/auth.guard';
 import { DiaryService } from 'src/services/diary.service';
 import { DateParamDto, UUIDParamDto } from 'src/validation';
 
-@Controller('diary')
 @ApiTags('Diary')
+@Controller('diary')
 @Authenticated()
 export class DiaryController {
     constructor(private service: DiaryService) {}

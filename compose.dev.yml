@@ -11,6 +11,7 @@ services:
       - 5000:9230
     volumes:
       - ./server/src:/usr/src/app/server/src
+      - ./open-api:/usr/src/app/open-api
       - /usr/src/app/server/node_modules
     env_file:
       - .env

@@ -76,12 +76,7 @@ export interface AuthOptions {
 }
 
 export const Authenticated = (options: AuthOptions = {}) => {
-    const decorators: MethodDecorator[] = [
-        ApiBearerAuth(),
-        ApiCookieAuth(),
-        // ApiSecurity(IMMICH_API_KEY_NAME),
-        SetMetadata(Metadata.AUTH_ROUTE, true),
-    ];
+    const decorators: MethodDecorator[] = [ApiBearerAuth(), ApiCookieAuth(), SetMetadata(Metadata.AUTH_ROUTE, true)];
 
     if (options.isAdmin) {
         decorators.push(AdminRoute());
