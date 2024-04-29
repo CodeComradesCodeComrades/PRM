@@ -1,19 +1,25 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, NotContains } from 'class-validator';
+import { string } from 'joi';
 import { UserEntity } from 'src/entities/user.entity';
 import { toEmail } from 'src/validation';
 
 export class CreateUserDto {
+    @ApiProperty({ type: string, example: 'test@example.com' })
     @IsEmail({ require_tld: true })
     @Transform(toEmail)
     email!: string;
 
+    @ApiProperty({ type: string, example: 'thispasswordisnotsafe' })
     @IsNotEmpty()
     @IsString()
     password!: string;
 
+    @ApiProperty({ type: string, example: 'John Doe' })
     @IsNotEmpty()
     @IsString()
+    @NotContains(' ')
     name!: string;
 }
 

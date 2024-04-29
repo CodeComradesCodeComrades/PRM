@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
     IsDate,
     IsDateString,
@@ -15,24 +15,36 @@ import {
     ValidatorConstraintInterface,
     registerDecorator,
 } from 'class-validator';
+import { string } from 'joi';
 import { DateTime } from 'luxon';
 import { DiaryEncryption, DiaryEntity } from 'src/entities/diary.entity';
 
 export class DiaryCreateDto {
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({ type: 'string', example: 'Today...' })
     content: string;
 
     @IsDateString({
         strict: true,
     })
     @IsOptional()
+    @ApiProperty({
+        type: 'string',
+        format: 'date',
+    })
     date: string;
 
     @IsInt()
     @Min(1)
     @Max(10)
     @IsOptional()
+    @ApiPropertyOptional({
+        type: Number,
+        minimum: 1,
+        maximum: 10,
+        example: 5,
+    })
     rating: number;
 }
 
@@ -54,11 +66,21 @@ export class DiaryEditDto {
     @IsString()
     @IsNotEmpty()
     @ValidateIf((o) => !o.rating || o.content)
+    @ApiProperty({
+        type: string,
+        example: 'Today...',
+    })
     content: string;
 
     @IsInt()
     @Min(1)
     @Max(10)
     @ValidateIf((o) => !o.content || o.rating)
+    @ApiPropertyOptional({
+        type: Number,
+        minimum: 1,
+        maximum: 10,
+        example: 5,
+    })
     rating: number;
 }
