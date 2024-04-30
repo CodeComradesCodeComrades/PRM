@@ -4,6 +4,7 @@ import {
     IsDateString,
     IsInt,
     IsNotEmpty,
+    IsNumber,
     IsOptional,
     IsString,
     Max,
@@ -29,7 +30,7 @@ export class DiaryCreateDto {
     @IsOptional()
     date: string;
 
-    @IsInt()
+    @IsNumber()
     @Min(1)
     @Max(10)
     @IsOptional()
@@ -60,7 +61,7 @@ export class DiaryEditDto {
     @ValidateIf((o) => !o.rating || o.content)
     content: string;
 
-    @IsInt()
+    @IsNumber()
     @Min(1)
     @Max(10)
     @ValidateIf((o) => !o.content || o.rating)

@@ -1,5 +1,48 @@
 <script>
   import UserPageLayout from "$lib/UserPageLayout.svelte";
+  import { onMount } from "svelte";
+  import { env } from "$env/dynamic/public";
+  import { DateTime } from "luxon";
+
+  const hosturl = env.SERVER_URL || "";
+
+  let diaries = [];
+
+  onMount(() => {
+    fetchDiaries();
+  });
+
+  async function fetchDiaries() {
+    const fetchres = await fetch(hosturl + "/api/diary", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const diaryjson = await fetchres.json();
+    diaries = diaryjson.diaries;
+
+    for (let i = 0; i < diaries.length; i++) {
+      let date = diaries[i].date;
+      let encryption = diaries[i].encryption;
+      let rating = diaries[i].rating;
+
+      diaries[i].filledstars = Math.floor(rating);
+      diaries[i].halfstars = (rating % 1) * 2;
+      diaries[i].unfilledstars =
+        10 - diaries[i].filledstars - diaries[i].halfstars;
+
+      if (encryption == "none") {
+        diaries[i].encrypted = false;
+      } else {
+        diaries[i].encrypted = true;
+      }
+
+      diaries[i].datestring =
+        DateTime.fromISO(date).toFormat("ccc, d. LLLL yyyy");
+    }
+  }
 </script>
 
 <link
@@ -9,34 +52,25 @@
 
 <UserPageLayout>
   <div class="entries">
-    <div class="diary-entry roboto">
-      <div class="flex">
-        <p class="date">Mon, 28. April 2024</p>
-        <div class="starbox">
-          <!--unfilled stars-->
-          {#each { length: 3 } as filledstar}
-            <span class="fa fa-star star filledstar"></span>
-          {/each}
-          <!--unfilled stars-->
-          <!--filled stars-->
-          {#each { length: 7 } as unfilledstar}
-            <span class="fa fa-star star star"></span>
-          {/each}
-          <!--filled stars-->
+    {#each diaries as diary}
+      <div class="diary-entry roboto">
+        <div class="flex">
+          <p class="date">{diary.datestring}</p>
+          <div class="starbox">
+            {#each { length: diary.filledstars } as filledstar}
+              <span class="fa fa-star star filledstar"></span>
+            {/each}
+            {#each { length: diary.halfstars } as halffilledstar}
+              <span class="fa fa-star-half-o star filledstar"></span>
+            {/each}
+            {#each { length: diary.unfilledstars } as unfilledstar}
+              <span class="fa fa-star star star"></span>
+            {/each}
+          </div>
         </div>
+        <p>{diary.content}</p>
       </div>
-      <p>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
-        voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
-        clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
-        amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-        nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-        sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-        rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-        ipsum dolor sit amet.
-      </p>
-    </div>
+    {/each}
   </div>
 </UserPageLayout>
 
@@ -53,6 +87,7 @@
     padding-right: 1vw;
     background-color: rgb(32, 32, 44);
     margin-right: 20vw;
+    margin-bottom: 2vh;
     border-radius: 0.2vw;
   }
 
