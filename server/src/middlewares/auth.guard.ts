@@ -42,7 +42,7 @@ export class AuthGuard implements CanActivate {
         const targets = [context.getHandler(), context.getClass()];
 
         const isAuthRoute = this.reflector.getAllAndOverride(Metadata.AUTH_ROUTE, targets);
-        // const isAdminRoute = this.reflector.getAllAndOverride(Metadata.ADMIN_ROUTE, targets);
+        const isAdminRoute = this.reflector.getAllAndOverride(Metadata.ADMIN_ROUTE, targets);
 
         if (!isAuthRoute) {
             return true;
@@ -51,15 +51,11 @@ export class AuthGuard implements CanActivate {
         const request = context.switchToHttp().getRequest<AuthRequest>();
 
         const authDto = await this.authService.validate(request.headers, request.query as Record<string, string>);
-        // if (authDto.sharedLink && !isSharedRoute) {
-        //     this.logger.warn(`Denied access to non-shared route: ${request.path}`);
-        //     return false;
-        // }
 
-        // if (isAdminRoute && !authDto.user.isAdmin) {
-        //     this.logger.warn(`Denied access to admin only route: ${request.path}`);
-        //     return false;
-        // }
+        if (isAdminRoute && !authDto.user.isAdmin) {
+            this.logger.warn(`Denied access to admin only route: ${request.path}`);
+            return false;
+        }
 
         request.user = authDto;
 

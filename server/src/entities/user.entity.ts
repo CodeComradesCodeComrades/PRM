@@ -19,4 +19,7 @@ export class UserEntity {
 
     @UpdateDateColumn({ type: 'timestamptz' })
     updatedAt!: Date;
+
+    @Column({ type: 'boolean', default: false })
+    isAdmin: boolean = false;
 }
