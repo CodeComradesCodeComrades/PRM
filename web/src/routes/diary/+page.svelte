@@ -9,6 +9,8 @@
 
   let diaries = [];
   let showCreateDiaryModal = false;
+  var today = new Date();
+  var isoDate = today.toISOString().split("T")[0];
 
   onMount(() => {
     fetchDiaries();
@@ -84,12 +86,60 @@
   </div>
 </UserPageLayout>
 
-<FullModal bind:showModal={showCreateDiaryModal}></FullModal>
+<FullModal bind:showModal={showCreateDiaryModal}>
+  <p class="new-entry-title roboto">New Diary Entry</p>
+
+  <div class="fields">
+    <div class="dateinput">
+      <p class="datedesc roboto">Date:</p>
+      <input type="date" class="date-selector roboto" bind:value={isoDate} />
+    </div>
+  </div>
+</FullModal>
 
 <style>
   .flex {
     display: flex;
     justify-content: space-between;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+  }
+
+  .new-entry-title {
+    font-size: 36px !important;
+    color: rgb(0, 255, 0) !important;
+    text-align: center;
+  }
+
+  .dateinput {
+    width: 50vw;
+    display: flex;
+  }
+
+  .date-selector {
+    color: black !important;
+    height: 50px;
+    margin-top: 0.6vh;
+  }
+
+  .datedesc {
+    font-size: 20px !important;
+    margin-right: 18px;
+  }
+
+  .fields {
+    display: flex;
+    justify-content: center;
   }
 
   .create-button {

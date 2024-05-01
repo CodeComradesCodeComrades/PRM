@@ -10,6 +10,7 @@
   <div class="close-div">
     <button class="close-button" on:click={() => dialog.close()}>✕</button>
   </div>
+  <slot />
 </dialog>
 
 <style>
@@ -24,8 +25,14 @@
   }
 
   .close-div {
+    position: absolute;
     float: right;
+    right: 18px;
     margin-top: -4px;
+  }
+
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.3);
   }
 
   .close-button {
