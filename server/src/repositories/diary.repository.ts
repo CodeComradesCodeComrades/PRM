@@ -19,10 +19,10 @@ export class DiaryRepository implements IDiaryRepository {
         return diary;
     }
 
-    async getByUserId(user: UserEntity) {
+    async getByUserId(userId: string) {
         return this.diaryRepository.find({
             where: {
-                userId: user.id,
+                userId: userId,
             },
         });
     }

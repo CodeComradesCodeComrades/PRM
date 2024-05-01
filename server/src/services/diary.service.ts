@@ -36,7 +36,7 @@ export class DiaryService {
     }
 
     async getAll(auth: AuthDto) {
-        const diaries = await this.diaryRepository.getByUserId(auth.user);
+        const diaries = await this.diaryRepository.getByUserId(auth.user.id);
 
         return {
             diaries: diaries.map((diary) => mapDiary(diary)),
