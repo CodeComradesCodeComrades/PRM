@@ -1,0 +1,39 @@
+<script>
+  export let showModal;
+
+  let dialog;
+
+  $: if (dialog && showModal) dialog.showModal();
+</script>
+
+<dialog class="dialog" bind:this={dialog} on:close={() => (showModal = false)}>
+  <div class="close-div">
+    <button class="close-button" on:click={() => dialog.close()}>✕</button>
+  </div>
+</dialog>
+
+<style>
+  .dialog {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(82, 82, 82);
+    width: 80vw;
+    height: 80vh;
+    background-color: rgb(10, 10, 10);
+    border-radius: 4px;
+  }
+
+  .close-div {
+    float: right;
+    margin-top: -4px;
+  }
+
+  .close-button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 30px;
+    float: right;
+  }
+</style>

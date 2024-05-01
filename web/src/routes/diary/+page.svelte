@@ -3,10 +3,12 @@
   import { onMount } from "svelte";
   import { env } from "$env/dynamic/public";
   import { DateTime } from "luxon";
+  import FullModal from "$lib/modals/FullModal.svelte";
 
   const hosturl = env.SERVER_URL || "";
 
   let diaries = [];
+  let showCreateDiaryModal = false;
 
   onMount(() => {
     fetchDiaries();
@@ -51,33 +53,58 @@
 />
 
 <UserPageLayout>
-  <div class="entries">
-    {#each diaries as diary}
-      <div class="diary-entry roboto">
-        <div class="flex">
-          <p class="date">{diary.datestring}</p>
-          <div class="starbox">
-            {#each { length: diary.filledstars } as filledstar}
-              <span class="fa fa-star star filledstar"></span>
-            {/each}
-            {#each { length: diary.halfstars } as halffilledstar}
-              <span class="fa fa-star-half-o star filledstar"></span>
-            {/each}
-            {#each { length: diary.unfilledstars } as unfilledstar}
-              <span class="fa fa-star star star"></span>
-            {/each}
+  <div class="flex">
+    <div class="entries">
+      {#each diaries as diary}
+        <div class="diary-entry roboto">
+          <div class="flex">
+            <p class="date">{diary.datestring}</p>
+            <div class="starbox">
+              {#each { length: diary.filledstars } as filledstar}
+                <span class="fa fa-star star filledstar"></span>
+              {/each}
+              {#each { length: diary.halfstars } as halffilledstar}
+                <span class="fa fa-star-half-o star filledstar"></span>
+              {/each}
+              {#each { length: diary.unfilledstars } as unfilledstar}
+                <span class="fa fa-star star star"></span>
+              {/each}
+            </div>
           </div>
+          <p>{diary.content}</p>
         </div>
-        <p>{diary.content}</p>
-      </div>
-    {/each}
+      {/each}
+    </div>
+    <div class="flex">
+      <button
+        class="create-button roboto"
+        on:click={() => (showCreateDiaryModal = true)}>New Diary</button
+      >
+    </div>
   </div>
 </UserPageLayout>
+
+<FullModal bind:showModal={showCreateDiaryModal}></FullModal>
 
 <style>
   .flex {
     display: flex;
     justify-content: space-between;
+  }
+
+  .create-button {
+    margin-top: 6vh;
+    width: 12vw;
+    margin-right: 8vw;
+    height: 5vh;
+    background-color: rgb(0, 211, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .create-button:active {
+    background-color: rgb(2, 172, 2);
   }
 
   .diary-entry {
@@ -86,7 +113,6 @@
     padding-left: 1vw;
     padding-right: 1vw;
     background-color: rgb(32, 32, 44);
-    margin-right: 20vw;
     margin-bottom: 2vh;
     border-radius: 0.2vw;
   }
@@ -114,6 +140,7 @@
   .entries {
     margin-left: 5vw;
     margin-top: 6vh;
+    margin-right: 2vw;
   }
 
   .roboto {
