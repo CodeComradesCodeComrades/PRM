@@ -1,15 +1,21 @@
 import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { CreateUserDto, UserDto } from 'src/dto/user.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { AuthDto } from 'src/dto/auth.dto';
+import { UserResponseDto } from 'src/dto/user.dto';
+import { Auth, Authenticated } from 'src/middlewares/auth.guard';
 import { UserService } from 'src/services/user.service';
 
 @ApiTags('User')
 @Controller('user')
+@Authenticated()
 export class UserController {
     constructor(private service: UserService) {}
 
-    @Post()
-    createUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-        return this.service.create(createUserDto);
+    @Get('me')
+    @ApiOkResponse({
+        type: UserResponseDto,
+    })
+    getMyUser(@Auth() authDto: AuthDto): Promise<UserResponseDto> {
+        return this.service.getMe(authDto);
     }
 }

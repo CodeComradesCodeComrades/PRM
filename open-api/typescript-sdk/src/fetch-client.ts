@@ -15,10 +15,15 @@ export const servers = {
     server1: "/api"
 };
 export type $ = {};
+export type CreateUserDto = {
+    email: string;
+    name: $;
+    password: string;
+};
 export type AuthCredentialDto = {
     email: $;
-    name?: string;
     password: $;
+    username?: string;
 };
 export type DiaryCreateDto = {
     content: string;
@@ -29,11 +34,24 @@ export type DiaryEditDto = {
     content: $;
     rating?: number;
 };
-export type CreateUserDto = {
-    email: $;
-    name: $;
-    password: $;
+export type ServerConfigDto = {
+    isOnboarded: boolean;
 };
+export type UserResponseDto = {
+    email: string;
+    id: string;
+    isAdmin: boolean;
+    name: string;
+};
+export function createFirstAdmin({ createUserDto }: {
+    createUserDto: CreateUserDto;
+}, opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchText("/auth/admin-signup", oazapfts.json({
+        ...opts,
+        method: "POST",
+        body: createUserDto
+    })));
+}
 export function login({ authCredentialDto }: {
     authCredentialDto: AuthCredentialDto;
 }, opts?: Oazapfts.RequestOpts) {
@@ -76,12 +94,19 @@ export function editDiary({ date, diaryEditDto }: {
         body: diaryEditDto
     })));
 }
-export function createUser({ createUserDto }: {
-    createUserDto: CreateUserDto;
-}, opts?: Oazapfts.RequestOpts) {
-    return oazapfts.ok(oazapfts.fetchText("/user", oazapfts.json({
-        ...opts,
-        method: "POST",
-        body: createUserDto
-    })));
+export function getServerConfig(opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 200;
+        data: ServerConfigDto;
+    }>("/server-info/config", {
+        ...opts
+    }));
+}
+export function getMyUser(opts?: Oazapfts.RequestOpts) {
+    return oazapfts.ok(oazapfts.fetchJson<{
+        status: 200;
+        data: UserResponseDto;
+    }>("/user/me", {
+        ...opts
+    }));
 }

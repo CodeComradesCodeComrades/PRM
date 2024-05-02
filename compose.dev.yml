@@ -12,7 +12,6 @@ services:
     volumes:
       - ./server/src:/usr/src/app/server/src
       - ./open-api:/usr/src/app/open-api
-      - /usr/src/app/server/node_modules
     env_file:
       - .env
   web:
@@ -20,16 +19,16 @@ services:
     restart: unless-stopped
     build:
       context: web
-      target: dev
+    command: ['/usr/src/app/web/bin/prm-web']
     env_file:
       - .env
     ports:
       - 2323:3000
-    command: npm run dev
     environment:
       - SERVER_URL=http://prm-server:3001
     volumes:
       - ./web:/usr/src/app/web
+      - ./open-api/:/usr/src/app/open-api/
       - /usr/src/app/web/node_modules
   database:
     hostname: postgres

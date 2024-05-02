@@ -11,14 +11,14 @@ export class AuthCredentialDto {
     @ApiProperty({ type: string, example: 'test@example.com' })
     @IsNotEmpty()
     @Transform(toEmail)
-    @ValidateIf((o) => !o.name || o.email)
+    @ValidateIf((o) => !o.username || o.email)
     email!: string;
 
     @ApiPropertyOptional()
     @ApiProperty({ example: 'testuser' })
     @IsNotEmpty()
-    @ValidateIf((o) => !o.email || o.name)
-    name!: string;
+    @ValidateIf((o) => !o.email || o.username)
+    username!: string;
 
     @ApiProperty({ type: string, example: 'thispasswordisnotsafe' })
     @IsNotEmpty()
@@ -29,7 +29,8 @@ export class AuthCredentialDto {
 export class LoginResponseDto {
     accessToken!: string;
     userId!: string;
-    userEmail!: string;
+    username: string;
+    email!: string;
     name!: string;
 }
 
@@ -41,7 +42,8 @@ export function mapLoginResponse(entity: UserEntity, accessToken: string): Login
     return {
         accessToken: accessToken,
         userId: entity.id,
-        userEmail: entity.email,
+        username: entity.username,
+        email: entity.email,
         name: entity.name,
     };
 }

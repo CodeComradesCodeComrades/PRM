@@ -48,4 +48,8 @@ export class UserRepository implements IUserRepository {
         const { id } = await this.userRepository.save(user);
         return this.userRepository.findOneOrFail({ where: { id }, withDeleted: true });
     }
+
+    async getAdmin(): Promise<UserEntity | null> {
+        return this.userRepository.findOne({ where: { isAdmin: true } });
+    }
 }

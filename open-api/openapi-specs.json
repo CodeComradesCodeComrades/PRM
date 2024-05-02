@@ -1,6 +1,30 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/auth/admin-signup": {
+      "post": {
+        "operationId": "createFirstAdmin",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
     "/auth/login": {
       "post": {
         "operationId": "login",
@@ -151,25 +175,51 @@
         ]
       }
     },
-    "/user": {
-      "post": {
-        "operationId": "createUser",
+    "/server-info/config": {
+      "get": {
+        "operationId": "getServerConfig",
         "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
-          "201": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerConfigDto"
+                }
+              }
+            },
             "description": ""
           }
         },
+        "tags": [
+          "Server Info"
+        ]
+      }
+    },
+    "/user/me": {
+      "get": {
+        "operationId": "getMyUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "cookie": []
+          }
+        ],
         "tags": [
           "User"
         ]
@@ -204,10 +254,6 @@
             ],
             "example": "test@example.com"
           },
-          "name": {
-            "example": "testuser",
-            "type": "string"
-          },
           "password": {
             "allOf": [
               {
@@ -215,6 +261,10 @@
               }
             ],
             "example": "thispasswordisnotsafe"
+          },
+          "username": {
+            "example": "testuser",
+            "type": "string"
           }
         },
         "required": [
@@ -226,12 +276,8 @@
       "CreateUserDto": {
         "properties": {
           "email": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/"
-              }
-            ],
-            "example": "test@example.com"
+            "example": "test@example.com",
+            "type": "string"
           },
           "name": {
             "allOf": [
@@ -242,18 +288,18 @@
             "example": "John Doe"
           },
           "password": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/"
-              }
-            ],
-            "example": "thispasswordisnotsafe"
+            "type": "string"
+          },
+          "username": {
+            "format": "username",
+            "type": "string"
           }
         },
         "required": [
           "email",
           "name",
-          "password"
+          "password",
+          "username"
         ],
         "type": "object"
       },
@@ -299,6 +345,42 @@
         },
         "required": [
           "content"
+        ],
+        "type": "object"
+      },
+      "ServerConfigDto": {
+        "properties": {
+          "isOnboarded": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isOnboarded"
+        ],
+        "type": "object"
+      },
+      "UserResponseDto": {
+        "properties": {
+          "email": {
+            "example": "test@example.com",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isAdmin": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "id",
+          "isAdmin",
+          "name"
         ],
         "type": "object"
       }
