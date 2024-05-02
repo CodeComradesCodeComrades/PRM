@@ -19,6 +19,7 @@ export type CreateUserDto = {
     email: string;
     name: $;
     password: string;
+    username: string;
 };
 export type AuthCredentialDto = {
     email: $;
