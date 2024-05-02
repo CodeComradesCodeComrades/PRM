@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ServerConfigDto } from 'src/dto/server-info.dto';
-import { ISystemMetadataRepository } from 'src/interfaces/system-metadata.interface';
 import { IUserRepository } from 'src/interfaces/user.interface';
 
 @Injectable()
