@@ -1,0 +1,9 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 120,
+  "semi": true,
+  "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-svelte"],
+  "organizeImportsSkipDestructiveCodeActions": true,
+  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
+}

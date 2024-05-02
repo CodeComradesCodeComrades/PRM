@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ACCESS_COOKIE } from 'src/constants';
 import { AuthCredentialDto, AuthDto, LoginResponseDto } from 'src/dto/auth.dto';
+import { CreateUserDto, UserDto } from 'src/dto/user.dto';
 import { LoginDetails } from 'src/interfaces/session.interface';
 import { Auth, Authenticated, GetLoginDetails, PublicRoute } from 'src/middlewares/auth.guard';
 import { AuthService } from 'src/services/auth.service';
@@ -39,7 +40,12 @@ export class AuthController {
         res: Response,
     ) {
         res.clearCookie(ACCESS_COOKIE);
-        await this.service.logout(authDto);
-        return;
+        return this.service.logout(authDto);
+    }
+
+    @PublicRoute()
+    @Post('admin-signup')
+    createFirstAdmin(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+        return this.service.adminSignUp(createUserDto);
     }
 }

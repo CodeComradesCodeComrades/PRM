@@ -3,32 +3,39 @@ import { Transform } from 'class-transformer';
 import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, NotContains } from 'class-validator';
 import { string } from 'joi';
 import { UserEntity } from 'src/entities/user.entity';
-import { toEmail } from 'src/validation';
+import { ValidateEmail, ValidateUUID, ValidateUsername, toEmail, toLowerCase } from 'src/validation';
 
 export class CreateUserDto {
-    @ApiProperty({ type: string, example: 'test@example.com' })
-    @IsEmail({ require_tld: true })
-    @Transform(toEmail)
+    @ValidateEmail()
     email!: string;
 
-    @ApiProperty({ type: string, example: 'thispasswordisnotsafe' })
+    @ApiProperty()
     @IsNotEmpty()
-    @IsString()
     password!: string;
+
+    @ValidateUsername()
+    username: string;
 
     @ApiProperty({ type: string, example: 'John Doe' })
     @IsNotEmpty()
     @IsString()
-    @NotContains(' ')
     name!: string;
 }
 
 export class UserDto {
+    @ValidateUUID()
     id!: string;
+    @ApiProperty()
     name!: string;
+    @ValidateEmail({
+        apiProperty: true,
+    })
     email!: string;
 }
-export class UserResponseDto extends UserDto {}
+export class UserResponseDto extends UserDto {
+    @ApiProperty()
+    isAdmin!: boolean;
+}
 
 export const mapSimpleUser = (entity: UserEntity): UserDto => {
     return {
@@ -41,5 +48,6 @@ export const mapSimpleUser = (entity: UserEntity): UserDto => {
 export function mapUser(entity: UserEntity): UserResponseDto {
     return {
         ...mapSimpleUser(entity),
+        isAdmin: entity.isAdmin,
     };
 }

@@ -1,15 +1,16 @@
-<script>
-  import LoadingDots from "$lib/LoadingDots.svelte";
-  import { env } from "$env/dynamic/public";
-  import { goto } from "$app/navigation";
+<script lang="ts">
+  import LoadingDots from '$lib/LoadingDots.svelte';
+  import { env } from '$env/dynamic/public';
+  import { goto } from '$app/navigation';
+  import { AppRoute } from '$lib/constants';
 
-  const hosturl = env.SERVER_URL || "";
+  const hosturl = '';
 
   let animateLoginButton = false;
-  let loginState = "idle";
+  let loginState = 'idle';
 
-  let username = "";
-  let password = "";
+  let username = '';
+  let password = '';
 
   /* Info: Login-States
   processing = login currently happening
@@ -21,7 +22,7 @@
 
   async function handleLogin() {
     animateLoginButton = true;
-    loginState = "processing";
+    loginState = 'processing';
 
     var loginbody;
 
@@ -32,41 +33,41 @@
       });
     } else {
       loginbody = JSON.stringify({
-        name: username,
+        username: username,
         password: password,
       });
     }
 
-    const loginres = await fetch(hosturl + "/api/auth/login", {
-      method: "POST",
+    const loginres = await fetch(hosturl + '/api/auth/login', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: loginbody,
     });
 
     if (loginres.ok) {
-      goto("/");
+      goto(AppRoute.MAIN_PAGE);
     } else {
       const loginresjson = await loginres.json();
 
       if (
-        loginresjson.message[0] == "email must be an email" ||
-        loginresjson.message[0] == "email should not be empty" ||
-        loginresjson.message[0] == "name should not be empty"
+        loginresjson.message[0] == 'email must be an email' ||
+        loginresjson.message[0] == 'email should not be empty' ||
+        loginresjson.message[0] == 'name should not be empty'
       ) {
-        loginState = "inv_name";
+        loginState = 'inv_name';
       } else if (
-        loginresjson.message[0] == "password should not be empty" ||
-        loginresjson.message == "Incorrect login details"
+        loginresjson.message[0] == 'password should not be empty' ||
+        loginresjson.message == 'Incorrect login details'
       ) {
-        loginState = "inv_pass";
+        loginState = 'inv_pass';
       } else if (loginres.status == 500) {
-        loginState = "internal_error";
+        loginState = 'internal_error';
       }
 
-      username = "";
-      password = "";
+      username = '';
+      password = '';
     }
 
     resetButton();
@@ -78,17 +79,14 @@
     }, 1000);
   }
 
-  function validateEmail(email) {
+  function validateEmail(email: string) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 </script>
 
 <main>
-  <link
-    rel="stylesheet"
-    href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-  />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" />
   <div class="loginbox">
     <div>
       <p class="login-header roboto">Log in</p>
@@ -98,7 +96,7 @@
       <div class="feedback-head">
         <p class="login-name roboto">Email or Username</p>
       </div>
-      {#if loginState == "inv_name"}
+      {#if loginState == 'inv_name'}
         <p class="user-feedback roboto">Invalid Email or Username</p>
         <i class="red user-icon fas fa-user"></i>
       {:else}
@@ -117,11 +115,11 @@
     <div class="pw-box">
       <div class="feedback-head">
         <p class="pw-name roboto">Password</p>
-        {#if loginState == "inv_pass"}
+        {#if loginState == 'inv_pass'}
           <p class="pass-feedback roboto">Invalid Password</p>
         {/if}
       </div>
-      {#if loginState == "inv_pass"}
+      {#if loginState == 'inv_pass'}
         <p class="pass-feedback roboto">Invalid Password</p>
         <i class="red pw-icon fas fa-lock"></i>
       {:else}
@@ -144,9 +142,9 @@
     {/if}
 
     <div>
-      {#if loginState == "internal_error"}
+      {#if loginState == 'internal_error'}
         <p class="error-msg roboto">Oops... something went wrong /:</p>
-      {:else if loginState == "timeout"}
+      {:else if loginState == 'timeout'}
         <p class="error-msg roboto">Connection to the Server timed out</p>
       {/if}
     </div>
@@ -305,7 +303,7 @@
   }
 
   .roboto {
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-style: normal;
   }
