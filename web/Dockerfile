@@ -1,12 +1,11 @@
-FROM node:18-alpine as dev
+FROM node:18-alpine
+
+RUN apk add --no-cache tini
+USER node
 WORKDIR /usr/src/app/web
-
-COPY package*.json ./
+COPY --chown=node:node package*.json ./
 RUN npm ci
+COPY --chown=node:node . .
 
-COPY . .
-CMD [ "npm", "run", "dev" ]
-
-FROM web as prod
-RUN npm run build
-RUN mv build/handler.js build/handler.mjs
+EXPOSE 3000
+ENTRYPOINT ["/sbin/tini", "--", "/bin/sh"]

@@ -1,10 +1,12 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import cookieParser from 'cookie';
 import { response } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { DateTime } from 'luxon';
-import { ACCESS_COOKIE, LOGIN_URL } from 'src/constants';
+import { ACCESS_COOKIE, IS_AUTHENTICATED_COOKIE, LOGIN_URL } from 'src/constants';
+import { UserCore } from 'src/core/user.core';
 import { AuthCredentialDto, AuthDto, LoginResponseDto, LogoutResponseDto, mapLoginResponse } from 'src/dto/auth.dto';
+import { CreateUserDto, UserDto, mapUser } from 'src/dto/user.dto';
 import { UserEntity } from 'src/entities/user.entity';
 import { ICryptoRepository } from 'src/interfaces/crypto.interface';
 import { IDatabaseRepository } from 'src/interfaces/database.interface';
@@ -13,22 +15,26 @@ import { IUserRepository } from 'src/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
+    private userCore: UserCore;
+
     constructor(
         @Inject(IUserRepository) private userRepository: IUserRepository,
         @Inject(IDatabaseRepository) private databaseRepository: IDatabaseRepository,
         @Inject(ICryptoRepository) private cryptoRepository: ICryptoRepository,
         @Inject(ISessionRepository) private sessionRepository: ISessionRepository,
-    ) {}
+    ) {
+        this.userCore = UserCore.create(userRepository, cryptoRepository);
+    }
 
     async login(dto: AuthCredentialDto, loginDetails: LoginDetails): Promise<LoginResponse> {
         let user: UserEntity;
 
-        if(dto.email) {
+        if (dto.email) {
             user = await this.userRepository.getByEmail(dto.email, true);
-        } else if(dto.name) {
-            user = await this.userRepository.getByName(dto.name, true);
+        } else if (dto.username) {
+            user = await this.userRepository.getByName(dto.username, true);
         }
-        
+
         if (user) {
             if (!this.checkPassword(dto.password, user)) {
                 user = null;
@@ -38,6 +44,7 @@ export class AuthService {
         if (!user) {
             throw new UnauthorizedException('Incorrect login details');
         }
+
         return this.createLoginResponse(user, loginDetails);
     }
 
@@ -72,13 +79,16 @@ export class AuthService {
         const maxAge = 30 * 24 * 3600;
 
         let sessionCookie = ``;
+        let isAuthenticated = ``;
 
         if (isSecure) {
             sessionCookie = `${ACCESS_COOKIE}=${loginResponse.accessToken}; HttpOnly; Secure; Path=/; Max-Age=${maxAge}; SameSite=Lax;`;
+            isAuthenticated = `${IS_AUTHENTICATED_COOKIE}=true; Secure; Path=/; Max-Age=${maxAge}; SameSite=Lax;`;
         } else {
             sessionCookie = `${ACCESS_COOKIE}=${loginResponse.accessToken}; HttpOnly; Path=/; Max-Age=${maxAge}; SameSite=Lax;`;
+            isAuthenticated = `${IS_AUTHENTICATED_COOKIE}=true; Secure; Path=/; Max-Age=${maxAge}; SameSite=Lax;`;
         }
-        return [sessionCookie];
+        return [sessionCookie, isAuthenticated];
     }
 
     async validate(headers: IncomingHttpHeaders, params: Record<string, string>): Promise<AuthDto> {
@@ -112,6 +122,19 @@ export class AuthService {
     private getCookieToken(headers: IncomingHttpHeaders): string | null {
         const cookies = cookieParser.parse(headers.cookie || '');
         return cookies[ACCESS_COOKIE] || null;
+    }
+
+    async adminSignUp(createUserDto: CreateUserDto): Promise<UserDto> {
+        const adminUser = await this.userRepository.getAdmin();
+        if (adminUser) {
+            throw new BadRequestException("There's already an admin account on this instance");
+        }
+        const admin = await this.userCore.createUser({
+            ...createUserDto,
+            isAdmin: true,
+        });
+
+        return mapUser(admin);
     }
 }
 

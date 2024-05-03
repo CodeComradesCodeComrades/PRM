@@ -1,12 +1,14 @@
 # dev build
 FROM node:20 as dev
-
+ARG UID=1000
+ARG GID=1000
+USER node
 
 WORKDIR /usr/src/app/server
-COPY package.json package-lock.json ./
+COPY --chown=node:node package.json package-lock.json ./
 RUN npm install
 
-COPY . ./
+COPY --chown=node:node . ./
 
 CMD npm run start:debug
 ENV NODE_ENV=development
