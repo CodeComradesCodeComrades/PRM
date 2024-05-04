@@ -1,0 +1,1 @@
+node --experimental-modules /usr/src/app/dist/main

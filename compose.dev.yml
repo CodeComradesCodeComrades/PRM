@@ -4,14 +4,15 @@ services:
     hostname: prm-server
     restart: unless-stopped
     build: 
-      context: server
+      dockerfile: server/Dockerfile
       target: dev
     ports:
       - 3001:3001
       - 5000:9230
     volumes:
-      - ./server/src:/usr/src/app/server/src
-      - ./open-api:/usr/src/app/open-api
+      - ./server:/usr/src/app
+      - ./open-api:/usr/src/open-api
+      - /usr/src/app/node_modules
     env_file:
       - .env
   web:
@@ -33,7 +34,7 @@ services:
   database:
     hostname: postgres
     container_name: PRM-Postgres
-    image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    image: tensorchord/pgvecto-rs:pg14-v0.2.1
     env_file:
       - .env
     environment:
