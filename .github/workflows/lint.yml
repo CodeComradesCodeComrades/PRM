@@ -1,72 +1,47 @@
-name: Lint and Format Code
+name: Node.js CI
 
-on:
-  pull_request:
-    branches:
-      - main
+on: pull_request
 
 jobs:
-  lint-and-format:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # Um sicherzustellen, dass die vollständige Git-Historie verfügbar ist
+      - uses: actions/checkout@v2
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "20"
 
-      - name: Install dependencies in server directory
+      - name: Install NPM dependencies
+        run: cd server && npm install
+
+      - name: Run Linter
+        id: lint
+        run: npm run lint
         working-directory: ./server
-        run: npm install
+        continue-on-error: true
 
-      - name: Run lint in server directory
-        id: lint_server
+      - name: Run Prettier
+        id: prettier
+        run: npm run prettier --check
         working-directory: ./server
-        run: npm run lint > lint-server-output.txt || echo "failed" > lint-server-fail.txt
+        continue-on-error: true
 
-      - name: Run format in server directory
-        working-directory: ./server
-        run: npm run format
+      - name: Check Lint and Prettier results
+        if: steps.lint.outcome == 'failure' || steps.prettier.outcome == 'failure'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: Der Linting Workflow war nicht erfolgreich. Bitte überprüfe die Code-Stil-Probleme.
 
-      # - name: Install dependencies in web directory
-      #   working-directory: ./web
-      #   run: npm install
-
-      # - name: Run format:fix in web directory
-      #   working-directory: ./web
-      #   run: npm run format:fix
-
-      # - name: Run lint:fix in web directory
-      #   id: lint_web
-      #   working-directory: ./web
-      #   run: npm run lint:fix > lint-web-output.txt || echo "failed" > lint-web-fail.txt
-
-      - name: Check if linting failed and post a comment
-        if: always()
+      - name: Create new branch and PR
+        if: steps.lint.outcome == 'success' && steps.prettier.outcome == 'success'
         run: |
-          server_errors=$(cat lint-server-fail.txt 2>/dev/null)
-          web_errors=$(cat lint-web-fail.txt 2>/dev/null)
-          if [[ "$server_errors" == "failed" || "$web_errors" == "failed" ]]; then
-            server_output=$(cat lint-server-output.txt 2>/dev/null)
-            web_output=$(cat lint-web-output.txt 2>/dev/null)
-            echo "Failed Linting Output:" > comment-body.txt
-            echo "Server Linting Issues:" >> comment-body.txt
-            echo "\`\`\`" >> comment-body.txt
-            echo "$server_output" >> comment-body.txt
-            echo "\`\`\`" >> comment-body.txt
-            echo "Web Linting Issues:" >> comment-body.txt
-            echo "\`\`\`" >> comment-body.txt
-            echo "$web_output" >> comment-body.txt
-            echo "\`\`\`" >> comment-body.txt
-            gh pr comment "$PR_URL" --body "$(cat comment-body.txt)"
-          fi
+          SHORT_COMMIT_HASH=$(echo ${{ github.sha }} | cut -c1-7)
+          git checkout -b dev/$SHORT_COMMIT_HASH
+          git push origin dev/$SHORT_COMMIT_HASH
+          gh pr create --base ${{ github.head_ref }} --head dev/$SHORT_COMMIT_HASH --title "Automated PR from successful linting" --body "Code formatting and linting passed successfully."
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # Weiterführende Schritte wie Branch-Erstellung und PR-Erstellung hier einfügen.
