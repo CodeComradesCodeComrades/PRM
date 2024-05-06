@@ -42,16 +42,16 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: Der Linting Workflow war nicht erfolgreich. Bitte überprüfe die Code-Stil-Probleme.
-
       - name: Create new branch and PR if linting was successful
-        if: steps.lint.outcome == 'success' && steps.prettier.outcome == 'success' && steps.verify-changed-files.outputs.files_changed == 'true'
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
           SHORT_COMMIT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)
           PARENT_PR_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | sed 's/.*\///')
           BRANCH_NAME="linting/$SHORT_COMMIT"
           git checkout -b $BRANCH_NAME
-          git add -A
+          git add .
+          git commit -m "Linting and formatting fixes"
           git push origin $BRANCH_NAME
-          gh pr create --base $BRANCH_NAME --head $BRANCH_NAME --title "Linting PR for PR #$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR #$PARENT_PR_NUMBER."
+          gh pr create --base main --head $BRANCH_NAME --title "Linting PR for PR #$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR #$PARENT_PR_NUMBER."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
