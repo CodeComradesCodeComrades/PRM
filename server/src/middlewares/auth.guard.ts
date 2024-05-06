@@ -50,7 +50,7 @@ export class AuthGuard implements CanActivate {
 
         const request = context.switchToHttp().getRequest<AuthRequest>();
 
-        const authDto = await this.authService.validate(request.headers, request.query as Record<string, string>);
+        const authDto = await this.authService.validate(request.headers);
 
         if (isAdminRoute && !authDto.user.isAdmin) {
             this.logger.warn(`Denied access to admin only route: ${request.path}`);
