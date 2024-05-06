@@ -44,7 +44,7 @@ jobs:
           body: Der Linting Workflow war nicht erfolgreich. Bitte überprüfe die Code-Stil-Probleme.
 
       - name: Create new branch and PR
-        if: steps.lint.outcome == 'success' && steps.prettier.outcome == 'success' && steps.verify-changed-files.outputs.files_changed == 'true'
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
           SHORT_COMMIT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)
           PARENT_PR_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | sed 's/.*\///')
