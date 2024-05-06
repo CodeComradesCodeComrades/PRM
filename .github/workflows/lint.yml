@@ -12,7 +12,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "20"
+          node-version: "14"
 
       - name: Install NPM dependencies
         run: cd server && npm install
@@ -25,9 +25,16 @@ jobs:
 
       - name: Run Prettier
         id: prettier
-        run: npm run format
+        run: npm run prettier --check
         working-directory: ./server
         continue-on-error: true
+
+      - name: Find file changes
+        uses: tj-actions/verify-changed-files@v19
+        id: verify-changed-files
+        with:
+          files: |
+            server/src
 
       - name: Check Lint and Prettier results
         if: steps.lint.outcome == 'failure' || steps.prettier.outcome == 'failure'
@@ -37,11 +44,13 @@ jobs:
           body: Der Linting Workflow war nicht erfolgreich. Bitte überprüfe die Code-Stil-Probleme.
 
       - name: Create new branch and PR
-        if: steps.lint.outcome == 'success' && steps.prettier.outcome == 'success'
+        if: steps.lint.outcome == 'success' && steps.prettier.outcome == 'success' && steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
-          SHORT_COMMIT_HASH=$(echo ${{ github.sha }} | cut -c1-7)
-          git checkout -b dev/$SHORT_COMMIT_HASH
-          git push origin dev/$SHORT_COMMIT_HASH
-          gh pr create --base ${{ github.head_ref }} --head dev/$SHORT_COMMIT_HASH --title "Automated PR from successful linting" --body "Code formatting and linting passed successfully."
+          SHORT_COMMIT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)
+          PARENT_PR_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | sed 's/.*\///')
+          BRANCH_NAME="linting/$SHORT_COMMIT"
+          git checkout -b $BRANCH_NAME
+          git push origin $BRANCH_NAME
+          gh pr create --base $BRANCH_NAME --head $BRANCH_NAME --title "Linting PR for PR #$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR #$PARENT_PR_NUMBER."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
