@@ -90,7 +90,7 @@ export class AuthService {
         return [sessionCookie, isAuthenticated];
     }
 
-    async validate(headers: IncomingHttpHeaders, params: Record<string, string>): Promise<AuthDto> {
+    async validate(headers: IncomingHttpHeaders): Promise<AuthDto> {
         const sessionToken = this.getCookieToken(headers) as string;
 
         if (sessionToken) {
