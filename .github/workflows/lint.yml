@@ -27,16 +27,15 @@ jobs:
       - name: Run lint in server directory
         id: lint_server
         working-directory: ./server
-        run: npm run lint
-        continue-on-error: true
+        run: npm run lint > lint-server-output.txt || echo "failed" > lint-server-fail.txt
 
       - name: Run format in server directory
         working-directory: ./server
         run: npm run format
 
-      - name: Install dependencies in web directory
-        working-directory: ./web
-        run: npm install
+      # - name: Install dependencies in web directory
+      #   working-directory: ./web
+      #   run: npm install
 
       # - name: Run format:fix in web directory
       #   working-directory: ./web
@@ -45,45 +44,29 @@ jobs:
       # - name: Run lint:fix in web directory
       #   id: lint_web
       #   working-directory: ./web
-      #   run: npm run lint:fix
-      #   continue-on-error: true
+      #   run: npm run lint:fix > lint-web-output.txt || echo "failed" > lint-web-fail.txt
 
-      - name: Create new branch if linting was successful
-        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
+      - name: Check if linting failed and post a comment
+        if: always()
         run: |
-          SHORT_COMMIT=$(git rev-parse --short HEAD)
-          git checkout -b linting/$SHORT_COMMIT
+          server_errors=$(cat lint-server-fail.txt 2>/dev/null)
+          web_errors=$(cat lint-web-fail.txt 2>/dev/null)
+          if [[ "$server_errors" == "failed" || "$web_errors" == "failed" ]]; then
+            server_output=$(cat lint-server-output.txt 2>/dev/null)
+            web_output=$(cat lint-web-output.txt 2>/dev/null)
+            echo "Failed Linting Output:" > comment-body.txt
+            echo "Server Linting Issues:" >> comment-body.txt
+            echo "\`\`\`" >> comment-body.txt
+            echo "$server_output" >> comment-body.txt
+            echo "\`\`\`" >> comment-body.txt
+            echo "Web Linting Issues:" >> comment-body.txt
+            echo "\`\`\`" >> comment-body.txt
+            echo "$web_output" >> comment-body.txt
+            echo "\`\`\`" >> comment-body.txt
+            gh pr comment "$PR_URL" --body "$(cat comment-body.txt)"
+          fi
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit changes if linting was successful
-        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: Flo the linting Bot
-          author_email: mail@florian-reichelt.de
-          default_author: user_info
-          message: "Automated linting and formatting based on commit ${{ github.sha }}"
-          push: true
-          new_branch: linting/$SHORT_COMMIT
-
-      - name: Force push changes if linting was successful
-        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
-        run: git push --force origin linting/$SHORT_COMMIT
-
-      - name: Create Pull Request if linting was successful
-        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
-        uses: repo-sync/pull-request@v2
-        with:
-          destination_branch: "${{ github.head_ref }}"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: "Lint and Format for branch ${{ github.head_ref }}"
-          pr_body: "Automated linting and formatting pull request based on commit ${{ github.sha }}"
-
-      - name: Post comment if linting failed
-        if: steps.lint_server.outcome != 'success' || steps.lint_web.outcome != 'success'
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            :warning: **Linting failed.**
-            Some issues couldn't be fixed automatically and require manual attention.
+    # Weiterführende Schritte wie Branch-Erstellung und PR-Erstellung hier einfügen.
