@@ -36,15 +36,33 @@ jobs:
           files: |
             server/src
 
-      - name: Check Lint and Prettier results
-        if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: |
-          COMMENT_ID=$(gh api repos/:owner/:repo/issues/${{ github.event.pull_request.number }}/comments --jq '.[] | select(.user.login=="github-actions[bot]") | .id')
-          if [ -z "$COMMENT_ID" ]; then
-            gh pr comment ${{ github.event.pull_request.number }} --body "Automated linting/formatting failed. Some issues couldn't be fixed automatically and require manual attention."
-          else
-            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID --input - <<< "{\"body\":\"Automated linting/formatting failed. Some issues couldn't be fixed automatically and require manual attention.\"}"
-          fi
+            - name: Find Comment
+            uses: peter-evans/find-comment@v1
+            id: fc
+            with:
+              issue-number: ${{ github.event.pull_request.number }}
+              comment-author: 'github-actions[bot]'
+              body-includes: "Automated linting/formatting failed."
+
+      - name: Create comment
+        if: steps.lint.outcome == 'failure' || steps.prettier.outcome == 'failure' && steps.fc.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            :warning: **Automated linting/formatting failed.**
+            Some issues couldn't be fixed automatically and require manual attention.
+          reactions: rocket
+      - name: Update comment
+        if: steps.lint.outcome == 'success' && steps.prettier.outcome == 'success' && steps.fc.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: |
+            :white_check_mark: **Automated linting/formatting passed.**
+            All issues have been successfully fixed.
+          reactions: hooray
+
       - name: Create new branch and PR if linting was successful
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
