@@ -63,7 +63,7 @@ jobs:
           default_author: user_info
           message: "Automated linting and formatting based on commit ${{ github.sha }}"
           push: true
-          branch: linting/$SHORT_COMMIT
+          new_branch: linting/$SHORT_COMMIT
 
       - name: Force push changes if linting was successful
         if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
@@ -71,7 +71,7 @@ jobs:
 
       - name: Create Pull Request if linting was successful
         if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
-        uses: repo-sync/pull-request@v3
+        uses: repo-sync/pull-request@v2
         with:
           destination_branch: "${{ github.head_ref }}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
