@@ -12,7 +12,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "20"
 
       - name: Install NPM dependencies
         run: cd server && npm install
@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Prettier
         id: prettier
-        run: npm run prettier --check
+        run: npm run format
         working-directory: ./server
         continue-on-error: true
 
