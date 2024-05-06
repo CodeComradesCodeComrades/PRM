@@ -48,6 +48,8 @@ jobs:
           SHORT_COMMIT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)
           PARENT_PR_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | sed 's/.*\///')
           BRANCH_NAME="linting/$SHORT_COMMIT"
+          git config --global user.email "mail@florian-reichelt.de"
+          git config --global user.name "Flo's linting bot"          
           git checkout -b $BRANCH_NAME
           git add .
           git commit -m "Linting and formatting fixes"
