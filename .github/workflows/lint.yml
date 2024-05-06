@@ -1,4 +1,4 @@
-name: Lint Code Base
+name: Lint and Format Code
 
 on:
   pull_request:
@@ -6,34 +6,48 @@ on:
       - main
 
 jobs:
-  lint:
+  lint-and-format:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Um sicherzustellen, dass die vollständige Git-Historie verfügbar ist
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "14"
 
-      - name: Install dependencies
+      - name: Install dependencies in server directory
+        working-directory: ./server
         run: npm install
 
-      - name: Run ESLint
-        run: ./node_modules/.bin/eslint --fix .
+      - name: Run lint in server directory
+        working-directory: ./server
+        run: npm run lint
 
-      - name: Run Prettier
-        run: ./node_modules/.bin/prettier --write .
+      - name: Run format in server directory
+        working-directory: ./server
+        run: npm run format
+
+      - name: Install dependencies in web directory
+        working-directory: ./web
+        run: npm install
+
+      - name: Run format:fix in web directory
+        working-directory: ./web
+        run: npm run format:fix
+
+      - name: Run lint:fix in web directory
+        working-directory: ./web
+        run: npm run lint:fix
 
       - name: Create new branch
         run: |
           SHORT_COMMIT=$(git rev-parse --short HEAD)
           git checkout -b linting/$SHORT_COMMIT
-
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:

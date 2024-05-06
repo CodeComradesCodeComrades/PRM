@@ -4,7 +4,11 @@
 	"scripts": {
 		"dev": "vite dev --host 0.0.0.0 --port 3000",
 		"build": "vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"lint": "eslint . --max-warnings 0",
+		"lint:fix": "npm run lint -- --fix",
+		"format": "prettier --check .",
+		"format:fix": "prettier --write ."
 	},
 	"dependencies": {
 		"@prm/sdk": "file:../open-api/typescript-sdk",
