@@ -38,15 +38,15 @@ jobs:
         working-directory: ./web
         run: npm install
 
-      - name: Run format:fix in web directory
-        working-directory: ./web
-        run: npm run format:fix
+      # - name: Run format:fix in web directory
+      #   working-directory: ./web
+      #   run: npm run format:fix
 
-      - name: Run lint:fix in web directory
-        id: lint_web
-        working-directory: ./web
-        run: npm run lint:fix
-        continue-on-error: true
+      # - name: Run lint:fix in web directory
+      #   id: lint_web
+      #   working-directory: ./web
+      #   run: npm run lint:fix
+      #   continue-on-error: true
 
       - name: Create new branch if linting was successful
         if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
