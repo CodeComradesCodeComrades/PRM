@@ -1,0 +1,50 @@
+name: Lint Code Base
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: ./node_modules/.bin/eslint --fix .
+
+      - name: Run Prettier
+        run: ./node_modules/.bin/prettier --write .
+
+      - name: Create new branch
+        run: |
+          SHORT_COMMIT=$(git rev-parse --short HEAD)
+          git checkout -b linting/$SHORT_COMMIT
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Flo the linting Bot
+          author_email: mail@florian-reichelt.de
+          default_author: user_info
+          message: "Automated linting and formatting based on commit ${{ github.sha }}"
+          push: true
+          new_branch: linting/$SHORT_COMMIT
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "${{ github.head_ref }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Lint and Format for branch ${{ github.head_ref }}"
+          pr_body: "Automated linting and formatting pull request based on commit ${{ github.sha }}"
