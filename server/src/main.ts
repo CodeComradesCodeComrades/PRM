@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { json } from 'body-parser';
 import cookieParser from 'cookie-parser';
 import 'reflect-metadata';
 import { ApiModule } from 'src/app.module';

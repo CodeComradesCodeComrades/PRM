@@ -2,7 +2,6 @@ import { Optional, applyDecorators } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsArray, IsDateString, IsEmail, IsNotEmpty, IsString, IsUUID, NotContains } from 'class-validator';
-import { string } from 'joi';
 
 type IValue = { value: string };
 

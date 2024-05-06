@@ -25,8 +25,10 @@ jobs:
         run: npm install
 
       - name: Run lint in server directory
+        id: lint_server
         working-directory: ./server
         run: npm run lint
+        continue-on-error: true
 
       - name: Run format in server directory
         working-directory: ./server
@@ -41,14 +43,19 @@ jobs:
         run: npm run format:fix
 
       - name: Run lint:fix in web directory
+        id: lint_web
         working-directory: ./web
         run: npm run lint:fix
+        continue-on-error: true
 
-      - name: Create new branch
+      - name: Create new branch if linting was successful
+        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
         run: |
           SHORT_COMMIT=$(git rev-parse --short HEAD)
           git checkout -b linting/$SHORT_COMMIT
-      - name: Commit changes
+
+      - name: Commit changes if linting was successful
+        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
         uses: EndBug/add-and-commit@v9
         with:
           author_name: Flo the linting Bot
@@ -56,12 +63,27 @@ jobs:
           default_author: user_info
           message: "Automated linting and formatting based on commit ${{ github.sha }}"
           push: true
-          new_branch: linting/$SHORT_COMMIT
+          branch: linting/$SHORT_COMMIT
 
-      - name: Create Pull Request
-        uses: repo-sync/pull-request@v2
+      - name: Force push changes if linting was successful
+        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
+        run: git push --force origin linting/$SHORT_COMMIT
+
+      - name: Create Pull Request if linting was successful
+        if: steps.lint_server.outcome == 'success' && steps.lint_web.outcome == 'success'
+        uses: repo-sync/pull-request@v3
         with:
           destination_branch: "${{ github.head_ref }}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_title: "Lint and Format for branch ${{ github.head_ref }}"
           pr_body: "Automated linting and formatting pull request based on commit ${{ github.sha }}"
+
+      - name: Post comment if linting failed
+        if: steps.lint_server.outcome != 'success' || steps.lint_web.outcome != 'success'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            :warning: **Linting failed.**
+            Some issues couldn't be fixed automatically and require manual attention.

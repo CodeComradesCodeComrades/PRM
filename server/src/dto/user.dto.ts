@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, NotContains } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { string } from 'joi';
 import { UserEntity } from 'src/entities/user.entity';
-import { ValidateEmail, ValidateUUID, ValidateUsername, toEmail, toLowerCase } from 'src/validation';
+import { ValidateEmail, ValidateUUID, ValidateUsername } from 'src/validation';
 
 export class CreateUserDto {
     @ValidateEmail()
