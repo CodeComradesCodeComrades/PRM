@@ -50,6 +50,7 @@ jobs:
           PARENT_PR_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | sed 's/.*\///')
           BRANCH_NAME="linting/$SHORT_COMMIT"
           git checkout -b $BRANCH_NAME
+          git add -A
           git push origin $BRANCH_NAME
           gh pr create --base $BRANCH_NAME --head $BRANCH_NAME --title "Linting PR for PR #$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR #$PARENT_PR_NUMBER."
         env:
