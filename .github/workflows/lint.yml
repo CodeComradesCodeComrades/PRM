@@ -36,13 +36,13 @@ jobs:
           files: |
             server/src
 
-            - name: Find Comment
-            uses: peter-evans/find-comment@v1
-            id: fc
-            with:
-              issue-number: ${{ github.event.pull_request.number }}
-              comment-author: 'github-actions[bot]'
-              body-includes: "Automated linting/formatting failed."
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: "Automated linting/formatting failed."
 
       - name: Create comment
         if: steps.lint.outcome == 'failure' || steps.prettier.outcome == 'failure' && steps.fc.outputs.comment-id == ''
@@ -74,7 +74,7 @@ jobs:
           git checkout -b $BRANCH_NAME
           git add .
           git commit -m "Automated linting for pr #$PARENT_PR_NUMBER"
-          git push origin $BRANCH_NAME
-          gh pr create --base $GITHUB_HEAD_REF --head $BRANCH_NAME --title "Automated linting PR for PR #$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR #$PARENT_PR_NUMBER."
+          git push origin $BRANCH_NAME -f
+          gh pr create --base $GITHUB_HEAD_REF --head $BRANCH_NAME --title "Automated linting PR for PR #$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR #$PARENT_PR_NUMBER. ⚠️#$$BRANCH_NAME should only be used by automated actions!!!⚠️  "
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
