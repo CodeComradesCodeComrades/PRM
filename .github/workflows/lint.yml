@@ -1,9 +1,9 @@
-name: Node.js CI
+name: Automated enforcing of linting
 
 on: pull_request
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,19 +14,38 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install NPM dependencies
-        run: cd server && npm install
+        #Server linting
+      - name: Install server NPM dependencies
+        run: npm install
+        working-directory: ./server
 
-      - name: Run Linter
-        id: lint
+      - name: Run server linter
+        id: server-lint
         run: npm run lint
         working-directory: ./server
         continue-on-error: true
 
-      - name: Run Prettier
-        id: prettier
+      - name: Run server prettier
+        id: server-prettier
         run: npm run format
         working-directory: ./server
+        continue-on-error: true
+
+        # Web Linting
+      - name: Install web NPM dependencies
+        run: npm install
+        working-directory: ./web
+
+      - name: Run web linter
+        id: web-lint
+        run: npm run lint:fix
+        working-directory: ./web
+        continue-on-error: true
+
+      - name: Run web prettier
+        id: web-prettier
+        run: npm run format:fix
+        working-directory: ./web
         continue-on-error: true
 
       - name: Find file changes
@@ -35,6 +54,7 @@ jobs:
         with:
           files: |
             server/src
+            web/src
 
       - name: Find Comment
         uses: peter-evans/find-comment@v1
@@ -45,36 +65,53 @@ jobs:
           body-includes: "Automated linting/formatting failed."
 
       - name: Create comment
-        if: steps.lint.outcome == 'failure' || steps.prettier.outcome == 'failure' && steps.fc.outputs.comment-id == ''
+        if: steps.server-lint.outcome == 'failure' || steps.server-prettier.outcome == 'failure' && steps.web-lint.outcome == 'failure' || steps.web-prettier.outcome == 'failure' && steps.fc.outputs.comment-id == ''
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          body: |
+          body: >
             :warning: **Automated linting/formatting failed.**
             Some issues couldn't be fixed automatically and require manual attention.
-          reactions: rocket
+            - **Server Linter:** ${{ steps.server-lint.outcome }}}
+            - **Server Formatter:** ${{ steps.server-prettier.outcome }}}
+            - **Web Linter:** ${{ steps.server-lint.outcome }}}
+            - **Web Formatter:** ${{ steps.server-prettier.outcome }}}
+
       - name: Update comment
-        if: steps.lint.outcome == 'success' && steps.prettier.outcome == 'success' && steps.fc.outputs.comment-id != ''
+        if: (steps.server-lint.outcome == 'success' && steps.server-prettier.outcome == 'success' && steps.server-lint.outcome == 'success' && steps.server-prettier.outcome == 'success') && steps.fc.outputs.comment-id != ''
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
-          body: |
+          body: >
             :white_check_mark: **Automated linting/formatting passed.**
             All issues have been successfully fixed.
+            - **Server Linter:** Passed
+            - **Server Formatter:** Passed
+            - **Web Linter:** Passed
+            - **Web Formatter:** Passed
           reactions: hooray
+          edit-mode: replace
 
-      - name: Create new branch and PR if linting was successful
+      - name: Create new branch if linting was successful
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         run: |
           SHORT_COMMIT=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)
           PARENT_PR_NUMBER=$(echo ${{ github.event.pull_request.head.ref }} | sed 's/.*\///')
-          BRANCH_NAME="linting/$SHORT_COMMIT"
-          git config --global user.email "mail@florian-reichelt.de"
+          BASE_BRANCH_NAME=${{ github.event.pull_request.head.ref }}
+          BRANCH_NAME="linting/$BASE_BRANCH_NAME"
+          git config --global user.email "github@florian-reichelt.de"
           git config --global user.name "Flo's linting bot"          
           git checkout -b $BRANCH_NAME
           git add .
           git commit -m "Automated linting for pr #$PARENT_PR_NUMBER"
           git push origin $BRANCH_NAME -f
-          gh pr create --base $GITHUB_HEAD_REF --head $BRANCH_NAME --title "Automated linting PR for PR #$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR #$PARENT_PR_NUMBER. ⚠️#$$BRANCH_NAME should only be used by automated actions!!!⚠️  "
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "${{ github.event.pull_request.head.ref }}"
+          source_branch: "linting/${{ github.event.pull_request.head.ref }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Automated linting PR for PR #$PARENT_PR_NUMBER"
+          pr_body: Automated linting PR for PR \#$PARENT_PR_NUMBER" --body "This PR is automatically generated to apply linting fixes for PR \#$PARENT_PR_NUMBER. \#$BRANCH_NAME should only be used by automated actions!!!"

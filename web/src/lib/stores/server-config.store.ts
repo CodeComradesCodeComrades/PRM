@@ -1,4 +1,4 @@
-import type { ServerConfigDto, UserResponseDto } from '@prm/sdk';
+import type { ServerConfigDto } from '@prm/sdk';
 import { writable } from 'svelte/store';
 
 export const serverConfig = writable<ServerConfigDto>();

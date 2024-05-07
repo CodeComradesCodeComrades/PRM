@@ -9,7 +9,7 @@ export const loadServerConfig = async (options?: { noCache: boolean }) => {
       serverConfig.set(loaded);
       return loaded;
     }
-  } catch (error) {
+  } catch {
     return null;
   }
 
