@@ -1,7 +1,3 @@
-import { INestApplication } from '@nestjs/common';
-import _ from 'lodash';
-import { writeFileSync } from 'node:fs';
-import path from 'node:path';
 import { PRMLogger } from 'src/utils/logger';
 
 export const isConnectionAborted = (error: Error | any) => error.code === 'ECONNABORTED';
@@ -15,20 +11,6 @@ export interface OpenGraphTags {
     description: string;
     imageUrl?: string;
 }
-
-function sortKeys<T>(target: T): T {
-    if (!target || typeof target !== 'object' || Array.isArray(target)) {
-        return target;
-    }
-
-    const result: Partial<T> = {};
-    const keys = Object.keys(target).sort() as Array<keyof T>;
-    for (const key of keys) {
-        result[key] = sortKeys(target[key]);
-    }
-    return result as T;
-}
-
 // export const routeToErrorMessage = (methodName: string) =>
 //     'Failed to ' + methodName.replaceAll(/[A-Z]+/g, (letter) => ` ${letter.toLowerCase()}`);
 

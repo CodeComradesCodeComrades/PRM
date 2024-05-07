@@ -1,6 +1,5 @@
 <script lang="ts">
   import LoadingDots from '$lib/LoadingDots.svelte';
-  import { env } from '$env/dynamic/public';
   import { goto } from '$app/navigation';
   import { AppRoute } from '$lib/constants';
 
@@ -47,7 +46,7 @@
     });
 
     if (loginres.ok) {
-      goto(AppRoute.MAIN_PAGE);
+      void goto(AppRoute.MAIN_PAGE);
     } else {
       const loginresjson = await loginres.json();
 

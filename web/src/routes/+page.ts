@@ -1,5 +1,4 @@
-import { GetOnboardedStatus, loadServerConfig } from '$lib/utils/config';
-import { getMyUser, getServerConfig } from '@prm/sdk';
+import { GetOnboardedStatus } from '$lib/utils/config';
 import { redirect } from '@sveltejs/kit';
 import { AppRoute } from '../lib/constants';
 import { loadUser } from '../lib/utils/auth';

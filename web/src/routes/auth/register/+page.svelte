@@ -40,7 +40,7 @@
           },
         });
         await goto(AppRoute.AUTH_LOGIN);
-      } catch (error) {
+      } catch {
         errorMessage = 'Error create admin account';
       }
     }

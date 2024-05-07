@@ -5,10 +5,9 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:svelte/recommended',
-    'plugin:unicorn/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', "unicorn", 'unused-imports'],
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 2022,
@@ -56,5 +55,6 @@ module.exports = {
     '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-misused-promises': 'error',
     '@typescript-eslint/require-await': 'error',
+    'unused-imports/no-unused-imports-ts': 2,
   },
 };

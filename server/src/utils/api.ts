@@ -6,7 +6,6 @@ import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { PROJECT_NAME, isDev, serverVersion } from 'src/constants';
 import { Metadata } from 'src/middlewares/auth.guard';
-import { routeToErrorMessage } from 'src/utils/misc';
 
 function sortKeys<T>(target: T): T {
     if (!target || typeof target !== 'object' || Array.isArray(target)) {

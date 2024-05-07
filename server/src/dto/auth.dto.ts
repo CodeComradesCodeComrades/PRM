@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, ValidateIf } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, ValidateIf } from 'class-validator';
 import { string } from 'joi';
 import { SessionEntity } from 'src/entities/sessions.entity';
 import { UserEntity } from 'src/entities/user.entity';

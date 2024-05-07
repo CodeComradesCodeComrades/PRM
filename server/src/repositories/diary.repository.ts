@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DiaryEntity } from 'src/entities/diary.entity';
 import { UserEntity } from 'src/entities/user.entity';
