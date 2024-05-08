@@ -20,6 +20,7 @@
 	"type": "module",
 	"license": "AGPL-3.0-only",
 	"devDependencies": {
+		"@types/luxon": "^3.4.2",
 		"autoprefixer": "^10.4.19",
 		"eslint": "^9.1.1",
 		"eslint-config-prettier": "^9.1.0",

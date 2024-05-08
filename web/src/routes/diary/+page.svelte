@@ -1,26 +1,29 @@
 <script>
-  import UserPageLayout from "$lib/UserPageLayout.svelte";
-  import { onMount } from "svelte";
-  import { env } from "$env/dynamic/public";
-  import { DateTime } from "luxon";
-  import FullModal from "$lib/modals/FullModal.svelte";
+  import UserPageLayout from '$lib/UserPageLayout.svelte';
+  import { onMount } from 'svelte';
+  import { env } from '$env/dynamic/public';
+  import { DateTime } from 'luxon';
+  import FullModal from '$lib/modals/FullModal.svelte';
 
-  const hosturl = env.SERVER_URL || "";
+  const hosturl = env.SERVER_URL || '';
 
+  /**
+   * @type any[];
+   */
   let diaries = [];
   let showCreateDiaryModal = false;
   var today = new Date();
-  var isoDate = today.toISOString().split("T")[0];
+  var isoDate = today.toISOString().split('T')[0];
 
   onMount(() => {
     fetchDiaries();
   });
 
   async function fetchDiaries() {
-    const fetchres = await fetch(hosturl + "/api/diary", {
-      method: "GET",
+    const fetchres = await fetch(hosturl + '/api/diary', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -34,25 +37,20 @@
 
       diaries[i].filledstars = Math.floor(rating);
       diaries[i].halfstars = (rating % 1) * 2;
-      diaries[i].unfilledstars =
-        10 - diaries[i].filledstars - diaries[i].halfstars;
+      diaries[i].unfilledstars = 10 - diaries[i].filledstars - diaries[i].halfstars;
 
-      if (encryption == "none") {
+      if (encryption == 'none') {
         diaries[i].encrypted = false;
       } else {
         diaries[i].encrypted = true;
       }
 
-      diaries[i].datestring =
-        DateTime.fromISO(date).toFormat("ccc, d. LLLL yyyy");
+      diaries[i].datestring = DateTime.fromISO(date).toFormat('ccc, d. LLLL yyyy');
     }
   }
 </script>
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
 <UserPageLayout>
   <div class="flex">
@@ -78,10 +76,7 @@
       {/each}
     </div>
     <div class="flex">
-      <button
-        class="create-button roboto"
-        on:click={() => (showCreateDiaryModal = true)}>New Diary</button
-      >
+      <button class="create-button roboto" on:click={() => (showCreateDiaryModal = true)}>New Diary</button>
     </div>
   </div>
 </UserPageLayout>
@@ -90,9 +85,15 @@
   <p class="new-entry-title roboto">New Diary Entry</p>
 
   <div class="fields">
-    <div class="dateinput">
-      <p class="datedesc roboto">Date:</p>
+    <div class="settings">
+      <p class="desc roboto">Date:</p>
       <input type="date" class="date-selector roboto" bind:value={isoDate} />
+
+      <p class="desc roboto">Encryption:</p>
+      <select class="encryption-selector desc roboto">
+        <option value="0">None</option>
+        <option value="1">AES</option>
+      </select>
     </div>
   </div>
 </FullModal>
@@ -103,7 +104,7 @@
     justify-content: space-between;
   }
 
-  input[type="date"]::-webkit-calendar-picker-indicator {
+  input[type='date']::-webkit-calendar-picker-indicator {
     background: transparent;
     bottom: 0;
     color: transparent;
@@ -115,26 +116,34 @@
     width: auto;
   }
 
+  .encryption-selector {
+    color: black !important;
+    width: 8vw;
+    margin-top: 0.8vh;
+    height: 50px;
+  }
+
   .new-entry-title {
     font-size: 36px !important;
     color: rgb(0, 255, 0) !important;
     text-align: center;
   }
 
-  .dateinput {
-    width: 50vw;
+  .settings {
+    width: 30vw;
     display: flex;
   }
 
   .date-selector {
     color: black !important;
-    height: 50px;
-    margin-top: 0.6vh;
+    height: 40px;
+    margin-top: 1vh;
+    margin-right: 4vw;
   }
 
-  .datedesc {
+  .desc {
     font-size: 20px !important;
-    margin-right: 18px;
+    margin-right: 16px;
   }
 
   .fields {
@@ -196,7 +205,7 @@
   .roboto {
     color: white;
     font-size: 18px;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-style: normal;
   }
