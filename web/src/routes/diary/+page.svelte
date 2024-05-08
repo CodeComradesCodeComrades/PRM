@@ -130,8 +130,9 @@
   }
 
   .settings {
-    width: 30vw;
+    width: 36rem;
     display: flex;
+    margin-top: -1.2vh;
   }
 
   .date-selector {
