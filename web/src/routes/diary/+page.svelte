@@ -86,7 +86,7 @@
 
   <div class="fields">
     <div class="settings">
-      <p class="desc roboto">Date:</p>
+      <p class="date-desc desc roboto">Date:</p>
       <input type="date" class="date-selector roboto" bind:value={isoDate} />
 
       <p class="desc roboto">Encryption:</p>
@@ -95,6 +95,11 @@
         <option value="1">AES</option>
       </select>
     </div>
+
+    <div class="content-container flex">
+      <p class="roboto content-desc">Content:</p>
+      <textarea class="diary-content roboto" placeholder="How has your day been? :)" />
+    </div>
   </div>
 </FullModal>
 
@@ -102,6 +107,31 @@
   .flex {
     display: flex;
     justify-content: space-between;
+  }
+
+  .content-container {
+    justify-content: center;
+    margin-top: 1rem;
+    flex-direction: column;
+    margin-left: 7rem;
+    margin-right: 7rem;
+  }
+
+  .diary-content {
+    height: 30vh;
+    background-color: rgb(32, 32, 44);
+    padding: 8px;
+    border-color: rgb(82, 82, 82);
+    border-style: solid;
+    border-radius: 2px;
+  }
+
+  .diary-content:focus {
+    outline: none;
+  }
+
+  .content-desc {
+    font-size: 20px !important;
   }
 
   input[type='date']::-webkit-calendar-picker-indicator {
@@ -133,13 +163,19 @@
     width: 36rem;
     display: flex;
     margin-top: -1.2vh;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .date-desc {
+    margin-left: 0.6rem;
   }
 
   .date-selector {
     color: black !important;
     height: 40px;
     margin-top: 1vh;
-    margin-right: 4vw;
+    margin-right: 4rem;
   }
 
   .desc {
@@ -150,6 +186,7 @@
   .fields {
     display: flex;
     justify-content: center;
+    flex-direction: column;
   }
 
   .create-button {
