@@ -1,6 +1,7 @@
 <script lang="ts">
   import { AppRoute } from '$lib/constants';
   import { fade } from 'svelte/transition';
+  import '$lib/tailwind.css';
 </script>
 
 <div class="outerbox" out:fade={{ duration: 150 }}>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import '$lib/tailwind.css';
   import FullscreenContainer from '$lib/components/shared-components/fullscreen-container.svelte';
   import Input from '$lib/components/shared-components/input.svelte';
   import { createFirstAdmin } from '@prm/sdk';
@@ -6,7 +7,6 @@
   import { AppRoute } from '$lib/constants';
   import { goto } from '$app/navigation';
   import { fade } from 'svelte/transition';
-
   let username = '';
   let email = '';
   let password = '';
