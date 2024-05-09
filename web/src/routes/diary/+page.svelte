@@ -6,6 +6,7 @@
   import FullModal from '$lib/modals/FullModal.svelte';
 
   const hosturl = env.SERVER_URL || '';
+  let selectedStars = 3;
 
   /**
    * @type any[];
@@ -18,6 +19,14 @@
   onMount(() => {
     fetchDiaries();
   });
+
+  function selectStars(starCount) {
+    if (selectedStars === starCount - 0.5) {
+      selectedStars = starCount;
+    } else {
+      selectedStars = starCount - 0.5;
+    }
+  }
 
   async function fetchDiaries() {
     const fetchres = await fetch(hosturl + '/api/diary', {
@@ -100,6 +109,32 @@
       <p class="roboto content-desc">Content:</p>
       <textarea class="diary-content roboto" placeholder="How has your day been? :)" />
     </div>
+
+    <div class="rating-container flex">
+      <p class="desc rating-desc roboto">Rating:</p>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div class="flex r-inputs">
+        <div class="starbox">
+          {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as star}
+            <span
+              role="button"
+              tabindex="-1"
+              class="fa star"
+              class:filledstar={star <= selectedStars || star - 0.5 === selectedStars}
+              on:click={() => selectStars(star)}
+            >
+              {#if star - 0.5 === selectedStars}
+                <i class="fa fa-star-half-o"></i>
+              {:else}
+                <i class="fa fa-star"></i>
+              {/if}
+            </span>
+          {/each}
+        </div>
+        <input class="rating-input roboto" type="number" bind:value={selectedStars} min="0" max="10" step="0.5" />
+      </div>
+      <button class="new-entry-button create-button roboto">Create Diary Entry</button>
+    </div>
   </div>
 </FullModal>
 
@@ -109,12 +144,45 @@
     justify-content: space-between;
   }
 
+  .rating-input {
+    margin-left: 1rem;
+    height: 1.5rem;
+    margin-top: 0.1rem;
+    color: black !important;
+    width: 5rem;
+    text-align: center;
+  }
+
+  .r-inputs {
+    justify-content: start;
+  }
+
+  .new-entry-button {
+    margin-top: 2.5rem !important;
+    width: 26rem !important;
+    margin-left: -7rem !important;
+    margin-right: 0 !important;
+    height: 6vh !important;
+    font-size: 24px !important;
+    align-self: center;
+  }
+
+  .rating-desc {
+    margin-bottom: 0.8rem;
+  }
+
   .content-container {
     justify-content: center;
     margin-top: 1rem;
     flex-direction: column;
     margin-left: 7rem;
     margin-right: 7rem;
+  }
+
+  .rating-container {
+    color: white;
+    flex-direction: column;
+    margin-left: 7rem;
   }
 
   .diary-content {
@@ -132,6 +200,7 @@
 
   .content-desc {
     font-size: 20px !important;
+    margin-bottom: 0.8rem;
   }
 
   input[type='date']::-webkit-calendar-picker-indicator {
