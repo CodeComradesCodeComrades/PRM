@@ -14,6 +14,7 @@
   let diaries = [];
   let showCreateDiaryModal = false;
   var today = new Date();
+  let enc_algo = 'None';
   var isoDate = today.toISOString().split('T')[0];
 
   onMount(() => {
@@ -94,15 +95,25 @@
   <p class="new-entry-title roboto">New Diary Entry</p>
 
   <div class="fields">
-    <div class="settings">
+    <div class="settings" class:settings-wider={enc_algo !== 'None'}>
       <p class="date-desc desc roboto">Date:</p>
-      <input type="date" class="date-selector roboto" bind:value={isoDate} />
+      <input type="date" class="date-selector roboto" class:ds-key-ac={enc_algo !== 'None'} bind:value={isoDate} />
 
       <p class="desc roboto">Encryption:</p>
-      <select class="encryption-selector desc roboto">
-        <option value="0">None</option>
-        <option value="1">AES</option>
+      <select bind:value={enc_algo} class="encryption-selector desc roboto">
+        <option value="None">None</option>
+        <option value="AES">AES</option>
       </select>
+
+      {#if enc_algo !== 'None'}
+        <p class="desc roboto">Key:</p>
+        <input type="password" class="key-input roboto" />
+      {/if}
+
+      {#if enc_algo !== 'None'}
+        <p class="re-enter-desc desc roboto">Re-Enter Key:</p>
+        <input type="password" class="key-input roboto" />
+      {/if}
     </div>
 
     <div class="content-container flex">
@@ -144,6 +155,13 @@
     justify-content: space-between;
   }
 
+  .key-input {
+    height: 44px;
+    margin-top: 0.8vh;
+    color: black !important;
+    font-size: 20px !important;
+  }
+
   .rating-input {
     margin-left: 1rem;
     height: 1.5rem;
@@ -169,6 +187,10 @@
 
   .rating-desc {
     margin-bottom: 0.8rem;
+  }
+
+  .re-enter-desc {
+    margin-left: 16px;
   }
 
   .content-container {
@@ -236,6 +258,10 @@
     margin-right: auto;
   }
 
+  .settings-wider {
+    width: 78rem !important;
+  }
+
   .date-desc {
     margin-left: 0.6rem;
   }
@@ -245,6 +271,10 @@
     height: 40px;
     margin-top: 1vh;
     margin-right: 4rem;
+  }
+
+  .ds-key-ac {
+    margin-right: 1rem;
   }
 
   .desc {
