@@ -134,18 +134,43 @@
 
       {#if enc_algo !== 'None'}
         <p class="desc roboto">Key:</p>
-        <input type="password" bind:value={enc_key} class="key-input roboto" />
+        <div>
+          {#if submitState == 'no_key'}
+            <p class="small-error-msg roboto">Please enter a Key and confirm it</p>
+          {:else if submitState == 'inv_key'}
+            <p class="small-error-msg roboto">Key and Confirm-Key don't match</p>
+          {/if}
+          <input
+            type="password"
+            bind:value={enc_key}
+            class="key-input roboto"
+            class:red-outline={submitState == 'no_key' || submitState == 'inv_key'}
+          />
+        </div>
       {/if}
 
       {#if enc_algo !== 'None'}
         <p class="confirm-desc desc roboto">Confirm Key:</p>
-        <input type="password" bind:value={enc_confirm_key} class="key-input roboto" />
+        <input
+          type="password"
+          bind:value={enc_confirm_key}
+          class="key-input roboto"
+          class:red-outline={submitState == 'no_key' || submitState == 'inv_key'}
+        />
       {/if}
     </div>
 
     <div class="content-container flex">
       <p class="roboto content-desc">Content:</p>
-      <textarea class="diary-content roboto" bind:value={content} placeholder="How has your day been? :)" />
+      {#if submitState == 'no_content'}
+        <p class="content-error small-error-msg roboto">The Content cannot be empty</p>
+      {/if}
+      <textarea
+        class="diary-content roboto"
+        bind:value={content}
+        placeholder="How has your day been? :)"
+        class:red-outline={submitState == 'no_content'}
+      />
     </div>
 
     <div class="rating-container flex">
@@ -187,6 +212,24 @@
     margin-top: 0.8vh;
     color: black !important;
     font-size: 20px !important;
+  }
+
+  .content-error {
+    margin-top: -0.25rem !important;
+    margin-bottom: 1.5rem;
+  }
+
+  .small-error-msg {
+    color: red !important;
+    font-size: 17px !important;
+    height: 0;
+    margin-top: -1.05rem;
+  }
+
+  .red-outline {
+    border-color: red !important;
+    border-style: solid !important;
+    border-radius: 2px;
   }
 
   .rating-input {
