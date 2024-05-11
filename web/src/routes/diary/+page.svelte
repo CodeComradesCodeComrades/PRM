@@ -15,7 +15,17 @@
   let showCreateDiaryModal = false;
   var today = new Date();
   let enc_algo = 'None';
+  let enc_key = '';
+  let enc_confirm_key = '';
+  let content = '';
   var isoDate = today.toISOString().split('T')[0];
+  let submitState = 'idle';
+  /** SubmitStates:
+   * idle: Nothing/Default
+   * no_key: Key-field and/or Confirm-key-field empty
+   * inv_key: Confirm-key-field invalid
+   * no_content: Missing diary content
+   */
 
   onMount(() => {
     fetchDiaries();
@@ -26,6 +36,23 @@
       selectedStars = starCount;
     } else {
       selectedStars = starCount - 0.5;
+    }
+  }
+
+  function submitCreateDiary() {
+    if (enc_algo != 'None') {
+      if (!enc_key || !enc_confirm_key) {
+        submitState = 'no_key';
+        return;
+      } else if (enc_key != enc_confirm_key) {
+        submitState = 'inv_key';
+        return;
+      }
+    }
+
+    if (!content) {
+      submitState = 'no_content';
+      return;
     }
   }
 
@@ -107,18 +134,18 @@
 
       {#if enc_algo !== 'None'}
         <p class="desc roboto">Key:</p>
-        <input type="password" class="key-input roboto" />
+        <input type="password" bind:value={enc_key} class="key-input roboto" />
       {/if}
 
       {#if enc_algo !== 'None'}
-        <p class="re-enter-desc desc roboto">Re-Enter Key:</p>
-        <input type="password" class="key-input roboto" />
+        <p class="confirm-desc desc roboto">Confirm Key:</p>
+        <input type="password" bind:value={enc_confirm_key} class="key-input roboto" />
       {/if}
     </div>
 
     <div class="content-container flex">
       <p class="roboto content-desc">Content:</p>
-      <textarea class="diary-content roboto" placeholder="How has your day been? :)" />
+      <textarea class="diary-content roboto" bind:value={content} placeholder="How has your day been? :)" />
     </div>
 
     <div class="rating-container flex">
@@ -144,7 +171,7 @@
         </div>
         <input class="rating-input roboto" type="number" bind:value={selectedStars} min="0" max="10" step="0.5" />
       </div>
-      <button class="new-entry-button create-button roboto">Create Diary Entry</button>
+      <button on:click={submitCreateDiary} class="new-entry-button create-button roboto">Create Diary Entry</button>
     </div>
   </div>
 </FullModal>
@@ -189,7 +216,7 @@
     margin-bottom: 0.8rem;
   }
 
-  .re-enter-desc {
+  .confirm-desc {
     margin-left: 16px;
   }
 
@@ -259,7 +286,7 @@
   }
 
   .settings-wider {
-    width: 78rem !important;
+    width: 80rem !important;
   }
 
   .date-desc {
