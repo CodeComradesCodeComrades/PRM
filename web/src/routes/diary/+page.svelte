@@ -43,17 +43,33 @@
     if (enc_algo != 'None') {
       if (!enc_key || !enc_confirm_key) {
         submitState = 'no_key';
+        ratelimitSubmitNewDiary();
         return;
       } else if (enc_key != enc_confirm_key) {
         submitState = 'inv_key';
+        ratelimitSubmitNewDiary();
         return;
       }
     }
 
     if (!content) {
       submitState = 'no_content';
+      ratelimitSubmitNewDiary();
       return;
     }
+
+    const fetchres = fetch(hosturl + '/api/diary', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  async function ratelimitSubmitNewDiary() {
+    setTimeout(() => {
+      submitState = 'idle';
+    }, 3200);
   }
 
   async function fetchDiaries() {
@@ -196,7 +212,12 @@
         </div>
         <input class="rating-input roboto" type="number" bind:value={selectedStars} min="0" max="10" step="0.5" />
       </div>
-      <button on:click={submitCreateDiary} class="new-entry-button create-button roboto">Create Diary Entry</button>
+      <button
+        on:click={submitCreateDiary}
+        disabled={submitState != 'idle'}
+        class="new-entry-button create-button roboto"
+        class:disable-submit={submitState != 'idle'}>Create Diary Entry</button
+      >
     </div>
   </div>
 </FullModal>
@@ -230,6 +251,14 @@
     border-color: red !important;
     border-style: solid !important;
     border-radius: 2px;
+  }
+
+  .disable-submit {
+    cursor: not-allowed !important;
+  }
+
+  .disable-submit:active {
+    background-color: rgb(0, 211, 0) !important;
   }
 
   .rating-input {
