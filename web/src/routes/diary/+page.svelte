@@ -20,6 +20,7 @@
   let content = '';
   var isoDate = today.toISOString().split('T')[0];
   let submitState = 'idle';
+  let noDiaries;
   /** SubmitStates:
    * idle: Nothing/Default
    * no_key: Key-field and/or Confirm-key-field empty
@@ -104,6 +105,8 @@
     const diaryjson = await fetchres.json();
     diaries = diaryjson.diaries;
 
+    if (diaries.length == 0) noDiaries = true;
+
     for (let i = 0; i < diaries.length; i++) {
       let date = diaries[i].date;
       let encryption = diaries[i].encryption;
@@ -129,6 +132,9 @@
 <UserPageLayout>
   <div class="flex">
     <div class="entries">
+      {#if noDiaries}
+        <p class="roboto">There is no Diary yet.</p>
+      {/if}
       {#each diaries as diary}
         <div class="diary-entry roboto">
           <div class="flex">
