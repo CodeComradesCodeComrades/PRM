@@ -3,7 +3,11 @@
 
   let dialog;
 
-  $: if (dialog && showModal) dialog.showModal();
+  $: if (dialog && showModal) {
+    dialog.showModal();
+  } else if (dialog && !showModal) {
+    dialog.close();
+  }
 </script>
 
 <dialog class="dialog" bind:this={dialog} on:close={() => (showModal = false)}>

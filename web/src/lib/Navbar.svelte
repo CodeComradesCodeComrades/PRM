@@ -8,8 +8,10 @@
 <style>
   .bar-container {
     position: fixed;
+    z-index: 1;
     left: 0px;
     bottom: 93vh;
+    background-color: rgb(16, 16, 16);
     border-width: 1px;
     border-color: rgb(59, 54, 54);
     border-bottom-style: solid;
@@ -23,7 +25,7 @@
 
   .roboto {
     color: white;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-style: normal;
   }

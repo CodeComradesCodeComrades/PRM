@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min, ValidateIf } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateIf } from 'class-validator';
 import { string } from 'joi';
 import { DiaryEncryption, DiaryEntity } from 'src/entities/diary.entity';
 
@@ -19,10 +19,9 @@ export class DiaryCreateDto {
     })
     date: string;
 
-    @IsInt()
-    @Min(1)
+    @IsNumber()
+    @Min(0.5)
     @Max(10)
-    @IsOptional()
     @ApiPropertyOptional({
         type: Number,
         minimum: 1,
@@ -30,6 +29,11 @@ export class DiaryCreateDto {
         example: 5,
     })
     rating: number;
+
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({type: 'string', example: 'RSA'})
+    encryption: DiaryEncryption;
 }
 
 export class DiaryResponseDto {

@@ -39,7 +39,7 @@
     }
   }
 
-  function submitCreateDiary() {
+  async function submitCreateDiary() {
     if (enc_algo != 'None') {
       if (!enc_key || !enc_confirm_key) {
         submitState = 'no_key';
@@ -58,12 +58,33 @@
       return;
     }
 
-    const fetchres = fetch(hosturl + '/api/diary', {
+    let final_enc_algo = 'none';
+    if (enc_algo == 'None') {
+      final_enc_algo = 'none';
+    } else {
+      final_enc_algo = enc_algo;
+    }
+
+    var submitBody = await JSON.stringify({
+      content: content,
+      date: isoDate,
+      rating: selectedStars,
+      encryption: final_enc_algo,
+    });
+
+    const submitfetch = await fetch(hosturl + '/api/diary', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: submitBody,
     });
+
+    const submitres = await submitfetch.json();
+    if (submitres.id) {
+      await fetchDiaries();
+      showCreateDiaryModal = false;
+    }
   }
 
   async function ratelimitSubmitNewDiary() {
@@ -388,6 +409,7 @@
   }
 
   .create-button {
+    position: fixed;
     margin-top: 6vh;
     width: 12vw;
     margin-right: 8vw;
@@ -433,9 +455,11 @@
   }
 
   .entries {
+    width: 58vw;
     margin-left: 5vw;
     margin-top: 6vh;
     margin-right: 2vw;
+    overflow: auto;
   }
 
   .roboto {

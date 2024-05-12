@@ -363,6 +363,10 @@
             "format": "date",
             "type": "string"
           },
+          "encryption": {
+            "example": "RSA",
+            "type": "string"
+          },
           "rating": {
             "example": 5,
             "maximum": 10,
@@ -372,7 +376,8 @@
         },
         "required": [
           "content",
-          "date"
+          "date",
+          "encryption"
         ],
         "type": "object"
       },

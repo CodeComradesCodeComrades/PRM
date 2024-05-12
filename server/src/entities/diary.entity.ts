@@ -27,7 +27,7 @@ export class DiaryEntity {
     content!: string;
 
     @Column({ type: 'int', nullable: true })
-    @Min(1)
+    @Min(0.5)
     @Max(10)
     rating: number;
 
