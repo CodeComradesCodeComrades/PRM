@@ -3,7 +3,7 @@
   "[javascript][typescript][css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.tabSize": 4,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": false
   },
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode",

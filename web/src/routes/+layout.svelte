@@ -1,5 +1,5 @@
 <script>
-  import '$lib/fonts.css';
+  import '../app.css';
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />

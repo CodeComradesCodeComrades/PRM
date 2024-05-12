@@ -72,26 +72,6 @@
       }
     },
     "/diary": {
-      "get": {
-        "operationId": "getAllDiaries",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "cookie": []
-          }
-        ],
-        "tags": [
-          "Diary"
-        ]
-      },
       "post": {
         "operationId": "create",
         "parameters": [],
@@ -106,7 +86,7 @@
           "required": true
         },
         "responses": {
-          "201": {
+          "200": {
             "description": ""
           }
         },
@@ -126,36 +106,6 @@
     "/diary/{date}": {
       "delete": {
         "operationId": "deleteByDate",
-        "parameters": [
-          {
-            "name": "date",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "date",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "cookie": []
-          }
-        ],
-        "tags": [
-          "Diary"
-        ]
-      },
-      "get": {
-        "operationId": "getDiary",
         "parameters": [
           {
             "name": "date",
@@ -363,10 +313,6 @@
             "format": "date",
             "type": "string"
           },
-          "encryption": {
-            "example": "RSA",
-            "type": "string"
-          },
           "rating": {
             "example": 5,
             "maximum": 10,
@@ -376,8 +322,7 @@
         },
         "required": [
           "content",
-          "date",
-          "encryption"
+          "date"
         ],
         "type": "object"
       },

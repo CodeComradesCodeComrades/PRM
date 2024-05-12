@@ -35,7 +35,6 @@ export const ValidateEmail = (options: EmailOptions = { apiProperty: true }) => 
     );
 };
 
-type PasswordOptions = {};
 export const ValidatePassword = () => {
     return applyDecorators();
 };

@@ -1,9 +1,8 @@
 import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import cookieParser from 'cookie';
-import { response } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { DateTime } from 'luxon';
-import { ACCESS_COOKIE, IS_AUTHENTICATED_COOKIE, LOGIN_URL } from 'src/constants';
+import { ACCESS_COOKIE, IS_AUTHENTICATED_COOKIE } from 'src/constants';
 import { UserCore } from 'src/core/user.core';
 import { AuthCredentialDto, AuthDto, LoginResponseDto, LogoutResponseDto, mapLoginResponse } from 'src/dto/auth.dto';
 import { CreateUserDto, UserDto, mapUser } from 'src/dto/user.dto';
@@ -91,7 +90,7 @@ export class AuthService {
         return [sessionCookie, isAuthenticated];
     }
 
-    async validate(headers: IncomingHttpHeaders, params: Record<string, string>): Promise<AuthDto> {
+    async validate(headers: IncomingHttpHeaders): Promise<AuthDto> {
         const sessionToken = this.getCookieToken(headers) as string;
 
         if (sessionToken) {

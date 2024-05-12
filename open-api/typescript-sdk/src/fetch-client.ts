@@ -29,7 +29,6 @@ export type AuthCredentialDto = {
 export type DiaryCreateDto = {
     content: string;
     date: string;
-    encryption: string;
     rating?: number;
 };
 export type DiaryEditDto = {
@@ -69,11 +68,6 @@ export function logout(opts?: Oazapfts.RequestOpts) {
         method: "POST"
     }));
 }
-export function getAllDiaries(opts?: Oazapfts.RequestOpts) {
-    return oazapfts.ok(oazapfts.fetchText("/diary", {
-        ...opts
-    }));
-}
 export function create({ diaryCreateDto }: {
     diaryCreateDto: DiaryCreateDto;
 }, opts?: Oazapfts.RequestOpts) {
@@ -89,13 +83,6 @@ export function deleteByDate({ date }: {
     return oazapfts.ok(oazapfts.fetchText(`/diary/${encodeURIComponent(date)}`, {
         ...opts,
         method: "DELETE"
-    }));
-}
-export function getDiary({ date }: {
-    date: string;
-}, opts?: Oazapfts.RequestOpts) {
-    return oazapfts.ok(oazapfts.fetchText(`/diary/${encodeURIComponent(date)}`, {
-        ...opts
     }));
 }
 export function editDiary({ date, diaryEditDto }: {
