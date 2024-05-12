@@ -37,5 +37,5 @@ jobs:
             We ask that $you sign our [Contributor License Agreement](https://github.com/CodeComeradesCodeComerades/.github/blob/main/CLA.md) before we can accept your contribution.<br/>
             Because CLAs are often seen as a controversial topic, we've stated our reasons [here](https://github.com/CodeComradesCodeComrades/.github/discussions/1)<br/>
             You can sign the CLA by adding a comment below using this text:
-          custom-allsigned-prcomment: "All contributors have signed the DCO."
+          custom-allsigned-prcomment: "All contributors have signed the CLA."
           lock-pullrequest-aftermerge: false
