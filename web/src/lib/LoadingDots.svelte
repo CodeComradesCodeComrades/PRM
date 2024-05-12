@@ -5,7 +5,6 @@
 <span class="pulse"></span>
 
 <style>
-    
   .pulse {
     position: absolute;
     top: 50%;
@@ -38,5 +37,4 @@
       opacity: 0;
     }
   }
-
-  </style>
+</style>
