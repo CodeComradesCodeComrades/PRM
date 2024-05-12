@@ -37,7 +37,6 @@ export class DiaryController {
 
     @Get()
     async getAllDiaries(@Auth() auth: AuthDto) {
-        console.log(auth.user);
         return this.service.getAll(auth);
     }
 }

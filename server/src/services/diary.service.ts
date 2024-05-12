@@ -29,7 +29,7 @@ export class DiaryService {
     }
 
     async get(auth: AuthDto, date: string) {
-        let diary = await this.diaryRepository.getByDateAndUser(date, auth.user);
+        const diary = await this.diaryRepository.getByDateAndUser(date, auth.user);
         if (!diary) throw new BadRequestException('Diary not found');
 
         return mapDiary(diary);

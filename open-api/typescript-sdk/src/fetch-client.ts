@@ -29,6 +29,7 @@ export type AuthCredentialDto = {
 export type DiaryCreateDto = {
     content: string;
     date: string;
+    encryption: string;
     rating?: number;
 };
 export type DiaryEditDto = {
