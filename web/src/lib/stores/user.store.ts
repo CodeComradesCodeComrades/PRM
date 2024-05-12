@@ -1,5 +1,5 @@
-import type { UserResponseDto } from "@prm/sdk";
-import { writable } from "svelte/store";
+import type { UserResponseDto } from '@prm/sdk';
+import { writable } from 'svelte/store';
 
 export const user = writable<UserResponseDto>();
 

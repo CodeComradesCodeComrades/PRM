@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
-import { json } from 'express';
 import { unless } from 'express-unless';
 import { existsSync } from 'fs';
 import 'reflect-metadata';
@@ -27,7 +26,7 @@ async function bootstrap() {
     }
 
     app.useLogger(app.get(PRMLogger));
-    app.use(json({ limit: '10mb' }));
+    // app.use(json({ limit: '10mb' }));
     app.use(cookieParser());
     app.enableCors();
 
