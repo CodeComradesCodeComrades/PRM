@@ -1,11 +1,13 @@
 <script>
-  import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
 
-  let currentTab = "home";
+  let currentTab = 'home';
   let path = $page.url.pathname;
 
-  if (path == "/diary") currentTab = "diary";
+  if (path == '/diary') {
+    currentTab = 'diary';
+  }
 </script>
 
 <div class="roboto bar-container">
@@ -15,8 +17,8 @@
   <div
     class="bar-element {currentTab === 'home' ? 'selected' : ''}"
     on:click={() => {
-      currentTab = "home";
-      goto("/");
+      currentTab = 'home';
+      goto('/');
     }}
     role="button"
   >
@@ -28,15 +30,10 @@
       stroke-width="1"
       stroke-linecap="round"
       stroke-linejoin="round"
-      class="icon icon-tabler icons-tabler-outline icon-tabler-home {currentTab ===
-      'home'
-        ? 'selectedIcon'
-        : ''}"
-      ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path
-        d="M5 12l-2 0l9 -9l9 9l-2 0"
-      /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path
-        d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"
-      /></svg
+      class="icon icon-tabler icons-tabler-outline icon-tabler-home {currentTab === 'home' ? 'selectedIcon' : ''}"
+      ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path
+        d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"
+      /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg
     >
     <p class="element-name">Home</p>
   </div>
@@ -47,8 +44,8 @@
   <div
     class="bar-element {currentTab === 'diary' ? 'selected' : ''}"
     on:click={() => {
-      currentTab = "diary";
-      goto("/diary");
+      currentTab = 'diary';
+      goto('/diary');
     }}
     role="button"
   >
@@ -60,10 +57,7 @@
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
-      class="icon icon-tabler icons-tabler-outline icon-tabler-notebook {currentTab ===
-      'diary'
-        ? 'selectedIcon'
-        : ''}"
+      class="icon icon-tabler icons-tabler-outline icon-tabler-notebook {currentTab === 'diary' ? 'selectedIcon' : ''}"
       ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path
         d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"
       /><path d="M13 8l2 0" /><path d="M13 12l2 0" /></svg
@@ -126,7 +120,7 @@
   .roboto {
     color: white;
     font-size: 18px;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-style: normal;
   }

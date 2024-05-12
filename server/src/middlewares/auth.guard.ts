@@ -81,11 +81,11 @@ export const Authenticated = (options: AuthOptions = {}) => {
     return applyDecorators(...decorators);
 };
 
-export const        Auth = createParamDecorator((data, context: ExecutionContext): AuthDto => {
+export const Auth = createParamDecorator((data, context: ExecutionContext): AuthDto => {
     return context.switchToHttp().getRequest<{ user: AuthDto }>().user;
 });
 
-export const                                  AdminRoute = (value = true) => SetMetadata(Metadata.ADMIN_ROUTE, value);
+export const AdminRoute = (value = true) => SetMetadata(Metadata.ADMIN_ROUTE, value);
 
 export const PublicRoute = () =>
     applyDecorators(SetMetadata(Metadata.AUTH_ROUTE, false), ApiSecurity(Metadata.PUBLIC_SECURITY));

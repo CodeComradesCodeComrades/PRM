@@ -1,12 +1,12 @@
-import { sveltekit } from "@sveltejs/kit/vite";
-import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig } from "vite";
+import { sveltekit } from '@sveltejs/kit/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
+import { defineConfig } from 'vite';
 
 const upstream = {
-  target: process.env.SERVER_URL || "http://127.0.0.1:3001/",
+  target: process.env.SERVER_URL || 'http://127.0.0.1:3001/',
   secure: true,
   changeOrigin: true,
-  logLevel: "info",
+  logLevel: 'info',
   ws: true,
 };
 
@@ -15,13 +15,13 @@ export default defineConfig({
     sveltekit(),
     visualizer({
       emitFile: true,
-      filename: "stats.html",
+      filename: 'stats.html',
     }),
   ],
   server: {
     // connect to a remote backend during web-only development
     proxy: {
-      "/api": upstream,
+      '/api': upstream,
     },
   },
 });

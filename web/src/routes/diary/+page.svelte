@@ -105,7 +105,9 @@
     const diaryjson = await fetchres.json();
     diaries = diaryjson.diaries;
 
-    if (diaries.length == 0) noDiaries = true;
+    if (diaries.length == 0) {
+      noDiaries = true;
+    }
 
     for (let i = 0; i < diaries.length; i++) {
       let date = diaries[i].date;
