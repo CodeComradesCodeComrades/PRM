@@ -26,6 +26,7 @@
    * no_key: Key-field and/or Confirm-key-field empty
    * inv_key: Confirm-key-field invalid
    * no_content: Missing diary content
+   * already_exists: An entry with this date already exists
    */
 
   onMount(() => {
@@ -85,6 +86,10 @@
     if (submitres.id) {
       await fetchDiaries();
       showCreateDiaryModal = false;
+    } else if (submitres.message == 'Diary entry already exists') {
+      submitState = 'already_exists';
+      ratelimitSubmitNewDiary();
+      return;
     }
   }
 
@@ -167,7 +172,18 @@
   <div class="fields">
     <div class="settings" class:settings-wider={enc_algo !== 'None'}>
       <p class="date-desc desc roboto">Date:</p>
-      <input type="date" class="date-selector roboto" class:ds-key-ac={enc_algo !== 'None'} bind:value={isoDate} />
+      <div>
+        {#if submitState == 'already_exists'}
+          <p class="small-error-msg roboto">Date already used</p>
+        {/if}
+        <input
+          type="date"
+          class="date-selector roboto"
+          class:ds-key-ac={enc_algo !== 'None'}
+          class:red-outline={submitState == 'already_exists'}
+          bind:value={isoDate}
+        />
+      </div>
 
       <p class="desc roboto">Encryption:</p>
       <select bind:value={enc_algo} class="encryption-selector desc roboto">
