@@ -156,7 +156,7 @@
               {/each}
             </div>
           </div>
-          <p>{diary.content}</p>
+          <p class="prewrap">{diary.content}</p>
         </div>
       {/each}
     </div>
@@ -281,6 +281,10 @@
   .content-error {
     margin-top: -0.25rem !important;
     margin-bottom: 1.5rem;
+  }
+
+  .prewrap {
+    white-space: pre-wrap;
   }
 
   .small-error-msg {
