@@ -105,9 +105,7 @@
     const diaryjson = await fetchres.json();
     diaries = diaryjson.diaries;
 
-    if (diaries.length == 0) {
-      noDiaries = true;
-    }
+    if (diaries.length == 0) noDiaries = true;
 
     for (let i = 0; i < diaries.length; i++) {
       let date = diaries[i].date;
@@ -304,6 +302,7 @@
   }
 
   .new-entry-button {
+    position: relative !important;
     margin-top: 2.5rem !important;
     width: 26rem !important;
     margin-left: -7rem !important;

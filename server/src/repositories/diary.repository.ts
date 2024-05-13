@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DiaryEntity } from 'src/entities/diary.entity';
 import { UserEntity } from 'src/entities/user.entity';
@@ -17,6 +17,14 @@ export class DiaryRepository implements IDiaryRepository {
             },
         });
         return diary;
+    }
+
+    async getByUserId(userId: string) {
+        return this.diaryRepository.find({
+            where: {
+                userId: userId,
+            },
+        });
     }
 
     async create(user: Partial<DiaryEntity>): Promise<DiaryEntity> {
