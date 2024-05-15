@@ -142,21 +142,32 @@
       {/if}
       {#each diaries as diary}
         <div class="diary-entry roboto">
-          <div class="flex">
-            <p class="date">{diary.datestring}</p>
-            <div class="starbox">
-              {#each { length: diary.filledstars } as filledstar}
-                <span class="fa fa-star star filledstar"></span>
-              {/each}
-              {#each { length: diary.halfstars } as halffilledstar}
-                <span class="fa fa-star-half-o star filledstar"></span>
-              {/each}
-              {#each { length: diary.unfilledstars } as unfilledstar}
-                <span class="fa fa-star star star"></span>
-              {/each}
+          <div class="a-content">
+            <div class="flex">
+              <p class="date">{diary.datestring}</p>
+              <div class="starbox">
+                {#each { length: diary.filledstars } as filledstar}
+                  <span class="fa fa-star star filledstar"></span>
+                {/each}
+                {#each { length: diary.halfstars } as halffilledstar}
+                  <span class="fa fa-star-half-o star filledstar"></span>
+                {/each}
+                {#each { length: diary.unfilledstars } as unfilledstar}
+                  <span class="fa fa-star star star"></span>
+                {/each}
+              </div>
+            </div>
+            <div class="d-cont">
+              <p class="prewrap">{diary.content}</p>
             </div>
           </div>
-          <p class="prewrap">{diary.content}</p>
+          <div class="flex">
+            <div class="splitter"></div>
+            <div class="diary-interactions flex">
+              <button class="di-button d-edit-button roboto">Edit</button>
+              <button class="di-button d-delete-button roboto">Delete</button>
+            </div>
+          </div>
         </div>
       {/each}
     </div>
@@ -271,6 +282,42 @@
     justify-content: space-between;
   }
 
+  .diary-interactions {
+    background-color: rgb(32, 32, 44);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 6.2rem;
+  }
+
+  .splitter {
+    border-left: 0px;
+    border-right: 1px;
+    border-style: solid;
+    margin-left: 1.5rem;
+    color: rgb(49, 49, 49);
+    margin-right: 0.32rem;
+  }
+
+  .di-button {
+    border: none;
+    height: 100%;
+    max-height: 3vw;
+  }
+
+  .d-delete-button {
+    background-color: red;
+  }
+
+  .d-edit-button {
+    background-color: orange;
+    margin-bottom: 2px;
+  }
+
+  .a-content {
+    width: 50vw;
+  }
+
   .key-input {
     height: 44px;
     margin-top: 0.8vh;
@@ -281,6 +328,10 @@
   .content-error {
     margin-top: -0.25rem !important;
     margin-bottom: 1.5rem;
+  }
+
+  .d-cont {
+    overflow-wrap: break-word;
   }
 
   .prewrap {
@@ -455,10 +506,11 @@
     color: white;
     padding: 0.2vw;
     padding-left: 1vw;
-    padding-right: 1vw;
     background-color: rgb(32, 32, 44);
-    margin-bottom: 2vh;
     border-radius: 0.2vw;
+    margin-bottom: 2vh;
+    display: flex !important;
+    flex-direction: row !important;
   }
 
   .starbox {
