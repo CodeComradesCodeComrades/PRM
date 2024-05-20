@@ -4,6 +4,7 @@
   import { env } from '$env/dynamic/public';
   import { DateTime } from 'luxon';
   import FullModal from '$lib/modals/FullModal.svelte';
+  import EditDiaryModal from '$lib/modals/EditDiaryModal.svelte';
 
   const hosturl = env.SERVER_URL || '';
   let selectedStars = 3;
@@ -13,6 +14,7 @@
    */
   let diaries = [];
   let showCreateDiaryModal = false;
+  let showEditDiaryModal = false;
   var today = new Date();
   let enc_algo = 'None';
   let enc_key = '';
@@ -21,6 +23,7 @@
   var isoDate = today.toISOString().split('T')[0];
   let submitState = 'idle';
   let noDiaries;
+  let editDiary;
   /** SubmitStates:
    * idle: Nothing/Default
    * no_key: Key-field and/or Confirm-key-field empty
@@ -164,7 +167,13 @@
             </div>
           </div>
           <div class="interactions">
-            <button class="edit-button i-button">
+            <button
+              class="edit-button i-button"
+              on:click={() => {
+                showEditDiaryModal = true;
+                editDiary = diary;
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -309,6 +318,8 @@
   </div>
 </FullModal>
 
+<EditDiaryModal bind:showEditDiaryModal bind:editDiary on:toggle={fetchDiaries} />
+
 <style>
   .flex {
     display: flex;
@@ -349,7 +360,7 @@
   }
 
   .a-content {
-    width: 50vw;
+    width: 51vw;
   }
 
   .key-input {
@@ -540,6 +551,7 @@
     color: white;
     padding: 0.2vw;
     padding-left: 1vw;
+    padding-right: 1vw;
     background-color: rgb(32, 32, 44);
     border-radius: 0.2vw;
     margin-bottom: 2vh;

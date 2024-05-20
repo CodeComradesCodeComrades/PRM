@@ -64,8 +64,8 @@ export class DiaryEditDto {
     })
     content: string;
 
-    @IsInt()
-    @Min(1)
+    @IsNumber()
+    @Min(0.5)
     @Max(10)
     @ValidateIf((o) => !o.content || o.rating)
     @ApiPropertyOptional({
