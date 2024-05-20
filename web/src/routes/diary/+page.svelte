@@ -141,32 +141,65 @@
         <p class="roboto">There is no Diary yet.</p>
       {/if}
       {#each diaries as diary}
-        <div class="diary-entry roboto">
-          <div class="a-content">
-            <div class="flex">
-              <p class="date">{diary.datestring}</p>
-              <div class="starbox">
-                {#each { length: diary.filledstars } as filledstar}
-                  <span class="fa fa-star star filledstar"></span>
-                {/each}
-                {#each { length: diary.halfstars } as halffilledstar}
-                  <span class="fa fa-star-half-o star filledstar"></span>
-                {/each}
-                {#each { length: diary.unfilledstars } as unfilledstar}
-                  <span class="fa fa-star star star"></span>
-                {/each}
+        <div class="dir-flex">
+          <div class="diary-entry roboto">
+            <div class="a-content">
+              <div class="flex">
+                <p class="date">{diary.datestring}</p>
+                <div class="starbox">
+                  {#each { length: diary.filledstars } as filledstar}
+                    <span class="fa fa-star star filledstar"></span>
+                  {/each}
+                  {#each { length: diary.halfstars } as halffilledstar}
+                    <span class="fa fa-star-half-o star filledstar"></span>
+                  {/each}
+                  {#each { length: diary.unfilledstars } as unfilledstar}
+                    <span class="fa fa-star star star"></span>
+                  {/each}
+                </div>
+              </div>
+              <div class="d-cont">
+                <p class="prewrap">{diary.content}</p>
               </div>
             </div>
-            <div class="d-cont">
-              <p class="prewrap">{diary.content}</p>
-            </div>
           </div>
-          <div class="flex">
-            <div class="splitter"></div>
-            <div class="diary-interactions flex">
-              <button class="di-button d-edit-button roboto">Edit</button>
-              <button class="di-button d-delete-button roboto">Delete</button>
-            </div>
+          <div class="interactions">
+            <button class="edit-button i-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon icon-tabler icons-tabler-outline icon-tabler-pencil"
+                ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path
+                  d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"
+                /><path d="M13.5 6.5l4 4" /></svg
+              >
+            </button>
+            <button class="delete-button i-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon icon-tabler icons-tabler-outline icon-tabler-trash"
+                ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path
+                  d="M14 11l0 6"
+                /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path
+                  d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
+                /></svg
+              >
+            </button>
           </div>
         </div>
       {/each}
@@ -282,36 +315,37 @@
     justify-content: space-between;
   }
 
-  .diary-interactions {
-    background-color: rgb(32, 32, 44);
+  .dir-flex {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 6.2rem;
   }
 
-  .splitter {
-    border-left: 0px;
-    border-right: 1px;
-    border-style: solid;
-    margin-left: 1.5rem;
-    color: rgb(49, 49, 49);
-    margin-right: 0.32rem;
+  .interactions {
+    align-self: center;
+    width: 3rem;
+    margin-top: -1rem; /* because full div has more height than expected, devided by 2 for centering*/
   }
 
-  .di-button {
+  .i-button {
+    cursor: pointer;
     border: none;
-    height: 100%;
-    max-height: 3vw;
   }
 
-  .d-delete-button {
+  .edit-button {
+    background-color: rgb(32, 250, 32);
+    border-top-right-radius: 0.4rem;
+  }
+
+  .edit-button:hover {
+    background-color: rgb(107, 231, 107);
+  }
+
+  .delete-button {
     background-color: red;
+    border-bottom-right-radius: 0.4rem;
   }
 
-  .d-edit-button {
-    background-color: orange;
-    margin-bottom: 2px;
+  .delete-button:hover {
+    background-color: rgb(255, 63, 63);
   }
 
   .a-content {
@@ -534,7 +568,7 @@
   }
 
   .entries {
-    width: 58vw;
+    width: 55vw;
     margin-left: 5vw;
     margin-top: 6vh;
     margin-right: 2vw;
