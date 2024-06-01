@@ -132,6 +132,10 @@
 
       diaries[i].datestring = DateTime.fromISO(date).toFormat('ccc, d. LLLL yyyy');
     }
+
+    diaries.sort(function (a, b) {
+      return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
+    });
   }
 </script>
 

@@ -25,7 +25,7 @@
     if (editDiary.rating === starCount - 0.5) {
       editDiary.rating = starCount;
     } else {
-      editDiary.selectedStars = starCount - 0.5;
+      editDiary.rating = starCount - 0.5;
     }
   }
 
