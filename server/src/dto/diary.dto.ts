@@ -70,9 +70,24 @@ export class DiaryEditDto {
     @ValidateIf((o) => !o.content || o.rating)
     @ApiPropertyOptional({
         type: Number,
-        minimum: 1,
+        minimum: 0.5,
         maximum: 10,
         example: 5,
     })
     rating: number;
+
+    @IsDateString({
+        strict: true,
+    })
+    @IsOptional()
+    @ApiProperty({
+        type: 'string',
+        format: 'date',
+    })
+    date: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({type: 'string', example: 'RSA'})
+    encryption: DiaryEncryption;
 }

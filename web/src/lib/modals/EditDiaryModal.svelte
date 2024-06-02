@@ -9,15 +9,21 @@
   export let editDiary = '';
   let enc_key = '';
   let enc_confirm_key = '';
+  let orig_date = '';
 
   let submitState = 'idle';
   let isEditDiaryInitialized = false;
+  let refreshDate = false;
 
   const hosturl = env.SERVER_URL || '';
 
   $: {
     if (editDiary !== '' && !isEditDiaryInitialized) {
       isEditDiaryInitialized = true;
+    }
+    if (editDiary !== '' && !refreshDate) {
+      refreshDate = true;
+      orig_date = editDiary.date;
     }
   }
 
@@ -27,6 +33,10 @@
     } else {
       editDiary.rating = starCount - 0.5;
     }
+  }
+
+  function storeOldDate() {
+    orig_date = editDiary.date;
   }
 
   async function submitEditDiary() {
@@ -62,7 +72,7 @@
       encryption: final_enc_algo,
     });
 
-    const editfetch = await fetch(hosturl + '/api/diary/' + editDiary.date, {
+    const editfetch = await fetch(hosturl + '/api/diary/' + orig_date, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -101,6 +111,7 @@
             class:ds-key-ac={editDiary.encryption !== 'none'}
             class:red-outline={submitState == 'already_exists'}
             bind:value={editDiary.date}
+            on:focus={storeOldDate}
           />
         </div>
 
