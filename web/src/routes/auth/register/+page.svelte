@@ -1,9 +1,9 @@
 <script lang="ts">
   import '$lib/tailwind.css';
-  import FullscreenContainer from '$lib/components/shared-components/fullscreen-container.svelte';
-  import Input from '$lib/components/shared-components/input.svelte';
+  import FullscreenContainer from '$lib/components/shared/FullscreenContainer.svelte';
+  import Input from '$lib/components/shared/RegInput.svelte';
   import { createFirstAdmin } from '@prm/sdk';
-  import NeonButton from '$lib/components/elements/buttons/neon-button.svelte';
+  import NeonButton from '$lib/components/buttons/NeonButton.svelte';
   import { AppRoute } from '$lib/constants';
   import { goto } from '$app/navigation';
   import { fade } from 'svelte/transition';

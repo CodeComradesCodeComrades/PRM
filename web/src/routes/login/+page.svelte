@@ -1,5 +1,5 @@
 <script lang="ts">
-  import LoadingDots from '$lib/LoadingDots.svelte';
+  import LoadingDots from '$lib/animations/LoadingDots.svelte';
   import { goto } from '$app/navigation';
   import { AppRoute } from '$lib/constants';
 
