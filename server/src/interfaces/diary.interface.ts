@@ -1,4 +1,3 @@
-import { AuthDto } from 'src/dto/auth.dto';
 import { DiaryEntity } from 'src/entities/diary.entity';
 import { UserEntity } from 'src/entities/user.entity';
 
