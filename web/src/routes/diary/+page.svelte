@@ -96,7 +96,7 @@
     }
   }
 
-  async function ratelimitSubmitNewDiary() {
+  function ratelimitSubmitNewDiary() {
     setTimeout(() => {
       submitState = 'idle';
     }, 3200);
@@ -113,7 +113,9 @@
     const diaryjson = await fetchres.json();
     diaries = diaryjson.diaries;
 
-    if (diaries.length == 0) noDiaries = true;
+    if (diaries.length == 0) {
+      noDiaries = true;
+    }
 
     for (let i = 0; i < diaries.length; i++) {
       let date = diaries[i].date;
@@ -217,7 +219,7 @@
         </div>
       {/each}
     </div>
-    <div class="flex">
+    <div class="flex mr-64">
       <button class="create-button roboto" on:click={() => (showCreateDiaryModal = true)}>New Diary</button>
     </div>
   </div>
@@ -299,7 +301,7 @@
               role="button"
               tabindex="-1"
               class="fa star"
-              class:filledstar={star <= selectedStars || star - 0.5 === selectedStars}
+              class:text-orange-400={star <= selectedStars || star - 0.5 === selectedStars}
               on:click={() => selectStars(star)}
             >
               {#if star - 0.5 === selectedStars}
@@ -324,7 +326,7 @@
 
 <EditDiaryModal bind:showEditDiaryModal bind:editDiary on:toggle={fetchDiaries} />
 
-<style>
+<style scoped>
   .flex {
     display: flex;
     justify-content: space-between;
@@ -571,10 +573,6 @@
   .star {
     font-size: 30px;
     margin-right: 0.2vw;
-  }
-
-  .filledstar {
-    color: orange;
   }
 
   .date {

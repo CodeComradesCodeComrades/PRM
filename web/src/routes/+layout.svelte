@@ -1,5 +1,6 @@
 <script>
   import '$lib/fonts.css';
+  import '$lib/tailwind.css';
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />

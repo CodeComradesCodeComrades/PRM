@@ -8,12 +8,27 @@
     --prm-primary: 32 32 32;
     --prm-secondary: 0 211 0;
   }
+
+  * {
+    /* @apply text-white */
+  }
 }
 
-:body {
+:root {
+  font-family: 'Roberto', sans-serif;
+  /* Used by layouts to ensure proper spacing between navbar and content */
+  --navbar-height: calc(theme(spacing.18) + 4px);
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  font-size: 17px;
+}
+
+body {
   margin: 0;
 }
-
 @layer utilities {
   .prm-form-input {
     @apply rounded-xl p-3 text-white text-sm outline-green-700 outline outline-2 transition-all ease-in-out focus:outline-prm-secondary focus:outline-4 bg-prm-primary disabled:cursor-not-allowed;

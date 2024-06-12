@@ -4,7 +4,7 @@ import { AuthDto } from 'src/dto/auth.dto';
 import { DiaryCreateDto, DiaryEditDto, DiaryResponseDto } from 'src/dto/diary.dto';
 import { Auth, Authenticated } from 'src/middlewares/auth.guard';
 import { DiaryService } from 'src/services/diary.service';
-import { DateParamDto, UUIDParamDto } from 'src/validation';
+import { DateParamDto } from 'src/validation';
 
 @ApiTags('Diary')
 @Controller('diary')
