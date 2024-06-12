@@ -12,7 +12,9 @@
   let currentTab = 'home';
   let path = $page.url.pathname;
 
-  if (path == '/diary') currentTab = 'diary';
+  if (path == '/diary') {
+    currentTab = 'diary';
+  }
 </script>
 
 <div class="roboto bar-container">

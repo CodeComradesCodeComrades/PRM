@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
 
   export let contacts = [];
@@ -27,8 +26,8 @@
     const match = value.match(/@(\w*)$/);
     if (match) {
       const query = match[1].toLowerCase();
-      const filteredContacts = contacts.filter(contact =>
-        contact.name.toLowerCase().startsWith(query) || contact.lastname.toLowerCase().startsWith(query)
+      const filteredContacts = contacts.filter(
+        (contact) => contact.name.toLowerCase().startsWith(query) || contact.lastname.toLowerCase().startsWith(query),
       );
       suggestions.set(filteredContacts);
       highlightedIndex.set(-1);
@@ -43,16 +42,18 @@
   }
 
   function selectSuggestion(contact) {
-    inputValue.update(value => {
+    inputValue.update((value) => {
       const lastAtIndex = value.lastIndexOf('@');
-      const newValue = value.slice(0, lastAtIndex) + `<span contenteditable="false" class="mention-span">@${contact.name} ${contact.lastname}</span>&nbsp;`;
+      const newValue =
+        value.slice(0, lastAtIndex) +
+        `<span contenteditable="false" class="mention-span">@${contact.name} ${contact.lastname}</span>&nbsp;`;
       editableDiv.innerHTML = newValue;
       renderedText.set(newValue);
       updateBackendText(newValue);
       setCursorToEnd(editableDiv);
       return newValue;
     });
-    selectedContactIds.update(ids => [...ids, contact.id]);
+    selectedContactIds.update((ids) => [...ids, contact.id]);
     hiddenInputElement.value = $selectedContactIds.join(',');
     showSuggestions.set(false);
   }
@@ -61,10 +62,10 @@
     if ($showSuggestions) {
       if (event.key === 'ArrowDown') {
         event.preventDefault();
-        highlightedIndex.update(n => (n + 1) % $suggestions.length);
+        highlightedIndex.update((n) => (n + 1) % $suggestions.length);
       } else if (event.key === 'ArrowUp') {
         event.preventDefault();
-        highlightedIndex.update(n => (n - 1 + $suggestions.length) % $suggestions.length);
+        highlightedIndex.update((n) => (n - 1 + $suggestions.length) % $suggestions.length);
       } else if (event.key === 'Enter') {
         event.preventDefault();
         if ($highlightedIndex >= 0) {
@@ -115,9 +116,9 @@
       mentionedNames.push(match[1]);
     }
 
-    selectedContactIds.update(ids => {
-      const newIds = ids.filter(id => {
-        const contact = contacts.find(contact => contact.id === id);
+    selectedContactIds.update((ids) => {
+      const newIds = ids.filter((id) => {
+        const contact = contacts.find((contact) => contact.id === id);
         if (contact) {
           const fullName = `${contact.name} ${contact.lastname}`;
           return mentionedNames.includes(fullName);
@@ -135,7 +136,7 @@
 
   function updateBackendText(value) {
     let text = value;
-    contacts.forEach(contact => {
+    contacts.forEach((contact) => {
       const fullName = `${contact.name} ${contact.lastname}`;
       const mentionText = `<span contenteditable="false" class="mention-span">@${fullName}</span>`;
       if (text.includes(mentionText)) {
@@ -145,6 +146,32 @@
     backendText.set(text);
   }
 </script>
+
+<div>
+  <div
+    bind:this={editableDiv}
+    contenteditable="true"
+    on:input={handleInput}
+    on:keydown={handleKeyDown}
+    class="editable-div {submitState == 'no_content' ? 'red-outline' : ''}"
+    {placeholder}
+  >
+    {@html content}
+  </div>
+  <input bind:this={hiddenInputElement} type="hidden" />
+  {#if $showSuggestions}
+    <div class="bg-gray-800 suggestions">
+      {#each $suggestions as contact, index}
+        <div
+          class="suggestion {index === $highlightedIndex ? 'highlighted' : ''}"
+          on:click={() => selectSuggestion(contact)}
+        >
+          {`${contact.name} ${contact.lastname}`}
+        </div>
+      {/each}
+    </div>
+  {/if}
+</div>
 
 <style>
   .suggestions {
@@ -186,27 +213,3 @@
     width: 100%;
   }
 </style>
-
-<div>
-  <div
-    bind:this={editableDiv}
-    contenteditable="true"
-    on:input={handleInput}
-    on:keydown={handleKeyDown}
-    class="editable-div {submitState == 'no_content' ? 'red-outline' : ''}"
-    placeholder={placeholder}
-  >{@html content}</div>
-  <input bind:this={hiddenInputElement} type="hidden" />
-  {#if $showSuggestions}
-    <div class="bg-gray-800 suggestions">
-      {#each $suggestions as contact, index}
-        <div
-          class="suggestion {index === $highlightedIndex ? 'highlighted' : ''}"
-          on:click={() => selectSuggestion(contact)}
-        >
-          {`${contact.name} ${contact.lastname}`}
-        </div>
-      {/each}
-    </div>
-  {/if}
-</div>

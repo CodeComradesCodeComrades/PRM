@@ -1,9 +1,9 @@
 <script>
   export let showModal;
   export let showCloseButton = true;
-  export let classes = "";
-  export let width = "80";
-  export let height = "80";
+  export let classes = '';
+  export let width = '80';
+  export let height = '80';
 
   let dialog;
 

@@ -3,12 +3,11 @@
   import Navbar from '$lib/Navbar.svelte';
 
   export let hideNavbar = false;
-
 </script>
 
 <header>
   {#if !hideNavbar}
-    <Navbar/>
+    <Navbar />
   {/if}
 
   <slot name="header" />
@@ -18,10 +17,10 @@
   class="relative grid h-screen grid-cols-[theme(spacing.18)_auto] overflow-hidden bg-prm-bg pt-[var(--navbar-height)] md:grid-cols-[theme(spacing.64)_auto]"
 >
   <slot name="sidebar">
-    <Sidebar/>
+    <Sidebar />
   </slot>
 
   <section class="relative">
-    <slot/>
+    <slot />
   </section>
 </main>

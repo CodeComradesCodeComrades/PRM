@@ -10,9 +10,7 @@
   >
     <h1 class="font-bold text-4xl ml-2">PRM</h1>
     <div class="flex justify-between gap-16 pr-6">
-
-      <section class="flex place-items-center justify-end gap-4 max-sm:w-full">
-      </section>
+      <section class="flex place-items-center justify-end gap-4 max-sm:w-full"></section>
     </div>
   </div>
 </section>
