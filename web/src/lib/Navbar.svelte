@@ -1,38 +1,18 @@
-<script>
+<script lang="ts">
+  let innerWidth: number;
 </script>
 
-<div class="bar-container">
-  <p class="roboto title">PRM</p>
-</div>
+<svelte:window bind:innerWidth />
 
-<style>
-  .bar-container {
-    position: fixed;
-    z-index: 1;
-    left: 0px;
-    bottom: 93vh;
-    background-color: rgb(16, 16, 16);
-    border-width: 1px;
-    border-color: rgb(59, 54, 54);
-    border-bottom-style: solid;
-    width: 100vw;
-  }
+<section id="dashboard-navbar" class="fixed z-[900] h-[var(--navbar-height)] w-screen text-sm">
+  <div
+    class="grid h-full grid-cols-[theme(spacing.18)_auto] items-center border-b bg-prm-bg py-2 md:grid-cols-[theme(spacing.64)_auto]"
+  >
+    <h1 class="font-bold text-4xl ml-2">PRM</h1>
+    <div class="flex justify-between gap-16 pr-6">
 
-  .title {
-    font-size: 4vh;
-    margin-bottom: 1.2vh;
-  }
-
-  .roboto {
-    color: white;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-
-  @media (min-width: 2400px) {
-    .bar-container {
-      bottom: 94vh;
-    }
-  }
-</style>
+      <section class="flex place-items-center justify-end gap-4 max-sm:w-full">
+      </section>
+    </div>
+  </div>
+</section>

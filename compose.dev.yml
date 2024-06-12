@@ -3,7 +3,7 @@ services:
     container_name: PRM-Server
     hostname: prm-server
     restart: unless-stopped
-    build: 
+    build:
       dockerfile: server/Dockerfile
       target: dev
     ports:
@@ -34,7 +34,9 @@ services:
   database:
     hostname: postgres
     container_name: PRM-Postgres
-    image: tensorchord/pgvecto-rs:pg14-v0.2.1
+    image: tensorchord/pgvecto-rs:pg14-v0.2.1-rootless
+    user: 1000:1000
+    restart: always
     env_file:
       - .env
     environment:

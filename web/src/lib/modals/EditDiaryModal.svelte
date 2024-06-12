@@ -65,11 +65,10 @@
       final_enc_algo = enc_algo;
     }
 
-    var submitBody = await JSON.stringify({
+    var submitBody = JSON.stringify({
       content: editDiary.content,
       date: editDiary.date,
       rating: editDiary.rating,
-      encryption: final_enc_algo,
     });
 
     const editfetch = await fetch(hosturl + '/api/diary/' + orig_date, {
@@ -87,7 +86,7 @@
     }
   }
 
-  async function ratelimitEditDiary() {
+  function ratelimitEditDiary() {
     setTimeout(() => {
       submitState = 'idle';
     }, 3200);
