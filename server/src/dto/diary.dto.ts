@@ -32,7 +32,7 @@ export class DiaryCreateDto {
 
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({type: 'string', example: 'RSA'})
+    @ApiProperty({ type: 'string', example: 'RSA' })
     encryption: DiaryEncryption;
 }
 
@@ -88,6 +88,6 @@ export class DiaryEditDto {
 
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({type: 'string', example: 'RSA'})
+    @ApiProperty({ type: 'string', example: 'RSA' })
     encryption: DiaryEncryption;
 }
