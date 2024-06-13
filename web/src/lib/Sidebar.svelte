@@ -90,12 +90,11 @@
 
   .bar-element {
     margin-left: 0.8vw;
-    margin-top: 0.6vw;
-    padding: 1rem;
+    margin-bottom: 0.5vw;
+    padding: 0.9rem;
     display: flex;
     cursor: pointer;
   }
-
   .bar-element:hover {
     background-color: rgb(48, 48, 56);
     border-radius: 10px;
