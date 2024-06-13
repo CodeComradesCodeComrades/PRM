@@ -301,7 +301,7 @@
               role="button"
               tabindex="-1"
               class="fa star"
-              class:text-orange-400={star <= selectedStars || star - 0.5 === selectedStars}
+              class:filledstar={star <= selectedStars || star - 0.5 === selectedStars}
               on:click={() => selectStars(star)}
             >
               {#if star - 0.5 === selectedStars}
@@ -573,6 +573,10 @@
   .star {
     font-size: 30px;
     margin-right: 0.2vw;
+  }
+
+  .filledstar {
+    color: orange;
   }
 
   .date {
