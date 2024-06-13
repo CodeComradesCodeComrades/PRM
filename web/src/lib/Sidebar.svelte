@@ -1,7 +1,7 @@
 <script>
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import SideBarSection from '$lib/components/shared-components/sidebar-section.svelte';
+  import SideBarSection from '$lib/components/shared/SidebarSection.svelte';
 
   let currentTab = 'home';
   let path = $page.url.pathname;
