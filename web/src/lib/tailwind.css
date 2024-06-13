@@ -9,8 +9,8 @@
     --prm-secondary: 0 211 0;
   }
 
-  * {
-    /* @apply text-white */
+  p {
+    @apply text-white
   }
 }
 
