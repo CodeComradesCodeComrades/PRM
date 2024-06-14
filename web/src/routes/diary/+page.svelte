@@ -338,18 +338,23 @@
 
   .interactions {
     align-self: center;
-    width: 3rem;
-    margin-top: -1rem; /* because full div has more height than expected, devided by 2 for centering*/
+    gap: 0;
+    display: flex;
+    width: 1.5rem;
+    flex-direction: column;
+    margin-bottom: 2vh;
   }
 
   .i-button {
     cursor: pointer;
     border: none;
+    gap: 0;
   }
 
   .edit-button {
     background-color: rgb(32, 250, 32);
     border-top-right-radius: 0.4rem;
+    gap: 0;
   }
 
   .edit-button:hover {
@@ -359,6 +364,7 @@
   .delete-button {
     background-color: red;
     border-bottom-right-radius: 0.4rem;
+    gap: 0;
   }
 
   .delete-button:hover {
@@ -560,7 +566,7 @@
     padding-right: 1vw;
     background-color: rgb(32, 32, 44);
     border-radius: 0.2vw;
-    margin-bottom: 2vh;
+    margin-bottom: 1.8rem;
     display: flex !important;
     flex-direction: row !important;
   }
@@ -581,6 +587,7 @@
 
   .date {
     display: flex;
+    margin-bottom: 1rem;
     font-size: 24px;
     color: rgb(0, 255, 0);
   }
