@@ -9,8 +9,8 @@
     --prm-secondary: 0 211 0;
   }
 
-  p {
-    @apply text-white
+  p,h1 {
+    @apply text-white;
   }
 }
 
@@ -29,6 +29,7 @@ html {
 body {
   margin: 0;
 }
+
 @layer utilities {
   .prm-form-input {
     @apply rounded-xl p-3 text-white text-sm outline-green-700 outline outline-2 transition-all ease-in-out focus:outline-prm-secondary focus:outline-4 bg-prm-primary disabled:cursor-not-allowed;
@@ -37,4 +38,5 @@ body {
   .prm-form-label {
     @apply font-medium text-white;
   }
+  
 }
