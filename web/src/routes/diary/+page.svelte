@@ -218,9 +218,9 @@
           </div>
         </div>
       {/each}
-    </div>
-    <div class="flex mr-64">
-      <button class="create-button roboto" on:click={() => (showCreateDiaryModal = true)}>New Diary</button>
+      <div class="flex">
+        <button class="create-button roboto" on:click={() => (showCreateDiaryModal = true)}>New Diary</button>
+      </div>
     </div>
   </div>
 </UserPageLayout>
@@ -389,6 +389,7 @@
 
   .d-cont {
     overflow-wrap: break-word;
+    line-height: 1.4rem;
   }
 
   .prewrap {
@@ -547,7 +548,6 @@
     position: fixed;
     margin-top: 6vh;
     width: 12vw;
-    margin-right: 8vw;
     height: 5vh;
     background-color: rgb(0, 211, 0);
     border: none;
