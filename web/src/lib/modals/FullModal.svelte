@@ -31,8 +31,8 @@
   .close-div {
     position: absolute;
     float: right;
-    right: 18px;
-    margin-top: -4px;
+    right: 0.75vw;
+    margin-top: 0.1vh;
   }
 
   dialog::backdrop {

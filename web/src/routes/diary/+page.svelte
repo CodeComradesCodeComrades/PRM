@@ -218,9 +218,9 @@
           </div>
         </div>
       {/each}
-      <div class="flex">
-        <button class="create-button roboto" on:click={() => (showCreateDiaryModal = true)}>New Diary</button>
-      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="create-button roboto" on:click={() => (showCreateDiaryModal = true)}>New Diary</button>
     </div>
   </div>
 </UserPageLayout>
@@ -230,7 +230,7 @@
 
   <div class="fields">
     <div class="settings" class:settings-wider={enc_algo !== 'None'}>
-      <p class="date-desc desc roboto">Date:</p>
+      <p class="descriptor date-desc desc roboto">Date:</p>
       <div>
         {#if submitState == 'already_exists'}
           <p class="small-error-msg roboto">Date already used</p>
@@ -244,14 +244,14 @@
         />
       </div>
 
-      <p class="desc roboto">Encryption:</p>
+      <p class="descriptor desc roboto">Encryption:</p>
       <select bind:value={enc_algo} class="encryption-selector desc roboto">
         <option value="None">None</option>
         <option value="AES">AES</option>
       </select>
 
       {#if enc_algo !== 'None'}
-        <p class="desc roboto">Key:</p>
+        <p class="descriptor desc roboto">Key:</p>
         <div>
           {#if submitState == 'no_key'}
             <p class="small-error-msg roboto">Please enter a Key and confirm it</p>
@@ -268,7 +268,7 @@
       {/if}
 
       {#if enc_algo !== 'None'}
-        <p class="confirm-desc desc roboto">Confirm Key:</p>
+        <p class="descriptor confirm-desc desc roboto">Confirm Key:</p>
         <input
           type="password"
           bind:value={enc_confirm_key}
@@ -376,15 +376,17 @@
   }
 
   .key-input {
-    height: 44px;
+    box-sizing: border-box;
+    height: 2.5rem;
     margin-top: 0.8vh;
     color: black !important;
     font-size: 20px !important;
   }
 
   .content-error {
-    margin-top: -0.25rem !important;
-    margin-bottom: 1.5rem;
+    position: relative;
+    margin-left: 0.2rem;
+    margin-top: 30.5vh !important;
   }
 
   .d-cont {
@@ -397,10 +399,11 @@
   }
 
   .small-error-msg {
+    position: absolute;
     color: red !important;
     font-size: 17px !important;
     height: 0;
-    margin-top: -1.05rem;
+    margin-top: -1rem;
   }
 
   .red-outline {
@@ -428,6 +431,7 @@
 
   .r-inputs {
     justify-content: start;
+    margin-top: -1.2rem;
   }
 
   .new-entry-button {
@@ -442,6 +446,7 @@
   }
 
   .rating-desc {
+    margin-top: 1.2rem;
     margin-bottom: 0.8rem;
   }
 
@@ -464,6 +469,7 @@
   }
 
   .diary-content {
+    box-sizing: border-box;
     height: 30vh;
     background-color: rgb(32, 32, 44);
     padding: 8px;
@@ -478,7 +484,8 @@
 
   .content-desc {
     font-size: 20px !important;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1.2rem;
   }
 
   input[type='date']::-webkit-calendar-picker-indicator {
@@ -497,25 +504,29 @@
     color: black !important;
     width: 8vw;
     margin-top: 0.8vh;
+    padding-left: 0.5rem;
     height: 50px;
   }
 
   .new-entry-title {
+    margin-top: 0.6rem;
     font-size: 36px !important;
     color: rgb(0, 255, 0) !important;
     text-align: center;
   }
 
   .settings {
-    width: 36rem;
+    width: 100%;
     display: flex;
-    margin-top: -1.2vh;
+    margin-top: 1.6vh;
     margin-left: auto;
     margin-right: auto;
+    box-sizing: border-box;
+    justify-content: center;
   }
 
   .settings-wider {
-    width: 80rem !important;
+    width: 100% !important;
   }
 
   .date-desc {
@@ -524,9 +535,10 @@
 
   .date-selector {
     color: black !important;
-    height: 40px;
+    box-sizing: border-box;
+    height: 2.5rem;
     margin-top: 1vh;
-    margin-right: 4rem;
+    margin-right: 1rem;
   }
 
   .ds-key-ac {
@@ -535,13 +547,25 @@
 
   .desc {
     font-size: 20px !important;
+    height: 2.5rem;
     margin-right: 16px;
+  }
+
+  .descriptor {
+    margin-top: 0.25rem;
+    height: 100%;
+    align-self: center;
   }
 
   .fields {
     display: flex;
     justify-content: center;
     flex-direction: column;
+  }
+
+  .action-buttons {
+    display: flex;
+    margin-right: 22vw;
   }
 
   .create-button {

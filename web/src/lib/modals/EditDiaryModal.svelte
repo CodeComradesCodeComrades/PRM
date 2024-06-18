@@ -99,7 +99,7 @@
 
     <div class="fields">
       <div class="settings" class:settings-wider={editDiary.encryption !== 'none'}>
-        <p class="date-desc desc roboto">Date:</p>
+        <p class="descriptor date-desc desc roboto">Date:</p>
         <div>
           {#if submitState == 'already_exists'}
             <p class="small-error-msg roboto">Date already used</p>
@@ -114,14 +114,14 @@
           />
         </div>
 
-        <p class="desc roboto">Encryption:</p>
+        <p class="descriptor desc roboto">Encryption:</p>
         <select bind:value={editDiary.encryption} class="encryption-selector desc roboto">
           <option value="none">None</option>
           <option value="AES">AES</option>
         </select>
 
         {#if editDiary.encryption !== 'none'}
-          <p class="desc roboto">Key:</p>
+          <p class="descriptor desc roboto">Key:</p>
           <div>
             {#if submitState == 'no_key'}
               <p class="small-error-msg roboto">Please enter a Key and confirm it</p>
@@ -138,7 +138,7 @@
         {/if}
 
         {#if editDiary.encryption !== 'none'}
-          <p class="confirm-desc desc roboto">Confirm Key:</p>
+          <p class="descriptor confirm-desc desc roboto">Confirm Key:</p>
           <input
             type="password"
             bind:value={enc_confirm_key}
@@ -206,18 +206,22 @@
     margin-top: 0.8vh;
     color: black !important;
     font-size: 20px !important;
+    height: 2.5rem;
+    box-sizing: border-box;
   }
 
   .content-error {
-    margin-top: -0.25rem !important;
-    margin-bottom: 1.5rem;
+    position: relative;
+    margin-left: 0.2rem;
+    margin-top: 30.5vh !important;
   }
 
   .small-error-msg {
+    position: absolute;
     color: red !important;
     font-size: 17px !important;
     height: 0;
-    margin-top: -1.05rem;
+    margin-top: -1rem;
   }
 
   .red-outline {
@@ -236,7 +240,7 @@
 
   .rating-input {
     margin-left: 1rem;
-    height: 1.5rem;
+    height: 2rem;
     margin-top: 0.1rem;
     color: black !important;
     width: 5rem;
@@ -244,13 +248,15 @@
   }
 
   .r-inputs {
+    margin-top: -1.2rem;
     justify-content: start;
   }
 
   .new-entry-button {
     position: relative !important;
-    margin-top: 2.5rem !important;
     width: 26rem !important;
+    max-width: 500px;
+    max-height: 60px;
     margin-left: -7rem !important;
     margin-right: 0 !important;
     height: 6vh !important;
@@ -259,6 +265,7 @@
   }
 
   .rating-desc {
+    margin-top: 1.2rem;
     margin-bottom: 0.8rem;
   }
 
@@ -287,6 +294,7 @@
     border-color: rgb(82, 82, 82);
     border-style: solid;
     border-radius: 2px;
+    box-sizing: border-box;
   }
 
   .diary-content:focus {
@@ -295,7 +303,8 @@
 
   .content-desc {
     font-size: 20px !important;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
+    margin-top: 1.2rem;
   }
 
   input[type='date']::-webkit-calendar-picker-indicator {
@@ -315,24 +324,28 @@
     width: 8vw;
     margin-top: 0.8vh;
     height: 50px;
+    padding-left: 0.5rem;
   }
 
   .new-entry-title {
+    margin-top: 0.6rem;
     font-size: 36px !important;
     color: rgb(0, 255, 0) !important;
     text-align: center;
   }
 
   .settings {
-    width: 36rem;
     display: flex;
-    margin-top: -1.2vh;
+    margin-top: 1.6vh;
     margin-left: auto;
     margin-right: auto;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
   }
 
   .settings-wider {
-    width: 80rem !important;
+    width: 100%;
   }
 
   .date-desc {
@@ -341,9 +354,10 @@
 
   .date-selector {
     color: black !important;
-    height: 40px;
+    height: 2.5rem;
     margin-top: 1vh;
-    margin-right: 4rem;
+    margin-right: 1rem;
+    box-sizing: border-box;
   }
 
   .ds-key-ac {
@@ -352,7 +366,14 @@
 
   .desc {
     font-size: 20px !important;
+    height: 2.5rem;
     margin-right: 16px;
+  }
+
+  .descriptor {
+    margin-top: 0.25rem;
+    height: 100%;
+    align-self: center;
   }
 
   .fields {
