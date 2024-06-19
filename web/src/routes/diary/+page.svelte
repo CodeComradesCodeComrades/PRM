@@ -30,6 +30,7 @@
    * inv_key: Confirm-key-field invalid
    * no_content: Missing diary content
    * already_exists: An entry with this date already exists
+   * inv_rating: Rating is invalid
    */
 
   onMount(() => {
@@ -93,6 +94,12 @@
       submitState = 'already_exists';
       ratelimitSubmitNewDiary();
       return;
+    } else if (
+      submitres.message[0] == 'rating must not be less than 0.5' ||
+      submitres.message[0] == 'rating must not be greater than 10'
+    ) {
+      submitState = 'inv_rating';
+      ratelimitSubmitNewDiary();
     }
   }
 
@@ -314,6 +321,9 @@
         </div>
         <input class="rating-input roboto" type="number" bind:value={selectedStars} min="0" max="10" step="0.5" />
       </div>
+      {#if submitState == 'inv_rating'}
+        <p class="inv-rating-error-msg small-error-msg roboto">Invalid rating</p>
+      {/if}
       <button
         on:click={submitCreateDiary}
         disabled={submitState != 'idle'}
@@ -427,6 +437,10 @@
     color: black !important;
     width: 5rem;
     text-align: center;
+  }
+
+  .inv-rating-error-msg {
+    margin-top: 5.4rem;
   }
 
   .r-inputs {

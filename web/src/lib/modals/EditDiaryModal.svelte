@@ -69,6 +69,7 @@
       content: editDiary.content,
       date: editDiary.date,
       rating: editDiary.rating,
+      encryption: final_enc_algo,
     });
 
     const editfetch = await fetch(hosturl + '/api/diary/' + orig_date, {
@@ -83,6 +84,15 @@
     if (editres.id) {
       showEditDiaryModal = false;
       dispatch('toggle');
+    } else if (
+      editres.message[0] == 'rating must not be less than 0.5' ||
+      editres.message[0] == 'rating must not be greater than 10'
+    ) {
+      submitState = 'inv_rating';
+      ratelimitEditDiary();
+    } else if (editres.message[0] == 'Failed to edit diary') {
+      submitState = 'failed_edit';
+      ratelimitEditDiary();
     }
   }
 
@@ -184,6 +194,12 @@
           </div>
           <input class="rating-input roboto" type="number" bind:value={editDiary.rating} min="0" max="10" step="0.5" />
         </div>
+        {#if submitState == 'inv_rating'}
+          <p class="inv-rating-error-msg small-error-msg roboto">Invalid rating</p>
+        {/if}
+        {#if submitState == 'failed_edit'}
+          <p class="failed-edit-error-msg small-error-msg roboto">No changes were found</p>
+        {/if}
         <button
           on:click={submitEditDiary}
           disabled={submitState != 'idle'}
@@ -214,6 +230,9 @@
     position: relative;
     margin-left: 0.2rem;
     margin-top: 30.5vh !important;
+  }
+
+  .failed-edit-error-msg {
   }
 
   .small-error-msg {
@@ -317,6 +336,10 @@
     right: 0;
     top: 0;
     width: auto;
+  }
+
+  .inv-rating-error-msg {
+    margin-top: 5.4rem;
   }
 
   .encryption-selector {
