@@ -635,7 +635,8 @@
     margin-left: 5vw;
     margin-top: 6vh;
     margin-right: 2vw;
-    overflow: auto;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .roboto {

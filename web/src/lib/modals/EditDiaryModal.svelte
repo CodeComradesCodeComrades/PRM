@@ -90,7 +90,7 @@
     ) {
       submitState = 'inv_rating';
       ratelimitEditDiary();
-    } else if (editres.message[0] == 'Failed to edit diary') {
+    } else if (editres.message[0] == 'Failed to edit diary' || editres.message[0] == 'No changes made') {
       submitState = 'failed_edit';
       ratelimitEditDiary();
     }
