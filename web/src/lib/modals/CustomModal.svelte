@@ -1,9 +1,9 @@
 <script>
   export let showModal;
   export let showCloseButton = true;
-  export let classes = "";
-  export let width = "80";
-  export let height = "80";
+  export let classes = '';
+  export let width = '80';
+  export let height = '80';
 
   let dialog;
 
@@ -14,19 +14,24 @@
   }
 </script>
 
-<dialog class={`dialog ${classes}`} bind:this={dialog} on:close={() => (showModal = false)}>
-  <div class={`relative w-${width} h-${height}`}>
-    {#if showCloseButton}
-      <div class="absolute top-2 right-4">
-        <button class="text-white text-2xl" on:click={() => dialog.close()}>✕</button>
-      </div>
-    {/if}
-    <slot />
-  </div>
+<dialog
+  class={`dialog ${classes}`}
+  bind:this={dialog}
+  on:close={() => (showModal = false)}
+  style={`width: ${width}vw; height: ${height}vh;`}
+>
+  {#if showCloseButton}
+    <div class="absolute top-2 right-4">
+      <button class="text-white text-2xl" on:click={() => dialog.close()}>✕</button>
+    </div>
+  {/if}
+  <slot />
 </dialog>
 
 <style>
   .dialog {
+    width: 80vw;
+    height: 80vh;
     border-style: solid;
     border-width: 1px;
     border-color: rgb(82, 82, 82);
