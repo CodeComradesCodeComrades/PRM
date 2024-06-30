@@ -34,6 +34,11 @@ export class DiaryCreateDto {
     @IsNotEmpty()
     @ApiProperty({ type: 'string', example: 'RSA' })
     encryption: DiaryEncryption;
+
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({ type: 'string', example: 'e0a533314daa3eb6d60807b1d6533fc96c886f19a813882331f27c42988dd165603b51d001aa5959037f63f19e51a18ab70702020c0aa89d'})
+    checksum: string;
 }
 
 export class DiaryResponseDto {
@@ -42,6 +47,7 @@ export class DiaryResponseDto {
     encryption: DiaryEncryption;
     content: string;
     rating: number;
+    checksum: string;
 }
 
 export function mapDiary(entity: DiaryEntity): DiaryResponseDto {
@@ -51,6 +57,7 @@ export function mapDiary(entity: DiaryEntity): DiaryResponseDto {
         encryption: entity.encryption,
         content: entity.content,
         rating: entity.rating,
+        checksum: entity.checksum,
     };
 }
 
@@ -90,4 +97,9 @@ export class DiaryEditDto {
     @IsNotEmpty()
     @ApiProperty({ type: 'string', example: 'RSA' })
     encryption: DiaryEncryption;
+
+    @IsString()
+    @IsNotEmpty()
+    @ApiProperty({ type: 'string', example: 'e0a533314daa3eb6d60807b1d6533fc96c886f19a813882331f27c42988dd165603b51d001aa5959037f63f19e51a18ab70702020c0aa89d'})
+    checksum: string;
 }

@@ -355,6 +355,10 @@
       },
       "DiaryCreateDto": {
         "properties": {
+          "checksum": {
+            "example": "e0a533314daa3eb6d60807b1d6533fc96c886f19a813882331f27c42988dd165603b51d001aa5959037f63f19e51a18ab70702020c0aa89d",
+            "type": "string"
+          },
           "content": {
             "example": "Today...",
             "type": "string"
@@ -375,6 +379,7 @@
           }
         },
         "required": [
+          "checksum",
           "content",
           "date",
           "encryption"
@@ -383,6 +388,10 @@
       },
       "DiaryEditDto": {
         "properties": {
+          "checksum": {
+            "example": "e0a533314daa3eb6d60807b1d6533fc96c886f19a813882331f27c42988dd165603b51d001aa5959037f63f19e51a18ab70702020c0aa89d",
+            "type": "string"
+          },
           "content": {
             "allOf": [
               {
@@ -407,6 +416,7 @@
           }
         },
         "required": [
+          "checksum",
           "content",
           "date",
           "encryption"

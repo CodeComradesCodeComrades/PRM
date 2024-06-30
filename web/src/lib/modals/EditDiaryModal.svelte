@@ -62,7 +62,7 @@
     if (editDiary.encryption == 'none') {
       final_enc_algo = 'none';
     } else {
-      final_enc_algo = enc_algo;
+      final_enc_algo = editDiary.encryption;
     }
 
     var submitBody = JSON.stringify({
@@ -411,14 +411,14 @@
     width: 12vw;
     margin-right: 8vw;
     height: 5vh;
-    background-color: rgb(0, 211, 0);
+    background-color: rgb(48, 117, 255);
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
 
   .create-button:active {
-    background-color: rgb(2, 172, 2);
+    background-color: rgb(30, 80, 179);
   }
 
   .starbox {

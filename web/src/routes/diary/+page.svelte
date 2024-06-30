@@ -1,10 +1,13 @@
 <script>
+  import CryptoJS from 'crypto-js';
+
   import UserPageLayout from '$lib/UserPageLayout.svelte';
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
   import { DateTime } from 'luxon';
   import FullModal from '$lib/modals/FullModal.svelte';
   import EditDiaryModal from '$lib/modals/EditDiaryModal.svelte';
+  import CustomModal from '$lib/modals/CustomModal.svelte';
 
   const hosturl = env.SERVER_URL || '';
   let selectedStars = 3;
@@ -15,6 +18,7 @@
   let diaries = [];
   let showCreateDiaryModal = false;
   let showEditDiaryModal = false;
+  let showDecryptModal = false;
   var today = new Date();
   let enc_algo = 'None';
   let enc_key = '';
@@ -24,6 +28,8 @@
   let submitState = 'idle';
   let noDiaries;
   let editDiary;
+  let decError = false;
+  let dec_key = '';
   /** SubmitStates:
    * idle: Nothing/Default
    * no_key: Key-field and/or Confirm-key-field empty
@@ -64,18 +70,29 @@
       return;
     }
 
+    //Generate hash to validate decryption keys
+    var checksum = await CryptoJS.SHA256(content).toString(CryptoJS.enc.Hex);
+
+    var finalcontent = '';
+
     let final_enc_algo = 'none';
+
     if (enc_algo == 'None') {
       final_enc_algo = 'none';
+
+      finalcontent = content;
     } else {
       final_enc_algo = enc_algo;
+
+      if (final_enc_algo == 'AES') finalcontent = await encryptAES(content, enc_key);
     }
 
     var submitBody = await JSON.stringify({
-      content: content,
+      content: finalcontent,
       date: isoDate,
       rating: selectedStars,
       encryption: final_enc_algo,
+      checksum: checksum,
     });
 
     const submitfetch = await fetch(hosturl + '/api/diary', {
@@ -103,6 +120,50 @@
     }
   }
 
+  $: {
+    if (dec_key != '') {
+      decError = false;
+    }
+  }
+
+  function decrypt() {
+    if (dec_key == '') {
+      decError = true;
+    } else {
+      decError = false;
+      //Start Decryption Attempts
+      for (let i = 0; i < diaries.length; i++) {
+        var decryptor = diaries[i].encryption;
+        var tempcontent = '';
+        if (decryptor == 'none' || !diaries[i].localencrypted) continue;
+        if (decryptor == 'AES') {
+          try {
+            tempcontent = decryptAES(diaries[i].content, dec_key);
+          } catch (err) {
+            console.log(err);
+            continue;
+          }
+        }
+        if (diaries[i].checksum === CryptoJS.SHA256(tempcontent).toString(CryptoJS.enc.Hex)) {
+          diaries[i].content = tempcontent;
+          diaries[i].localencrypted = false;
+        }
+      }
+
+      showDecryptModal = false;
+    }
+  }
+
+  function encryptAES(text, passphrase) {
+    const encrypted = CryptoJS.AES.encrypt(text, passphrase);
+    return encrypted.toString();
+  }
+
+  function decryptAES(ciphertext, passphrase) {
+    const decrypted = CryptoJS.AES.decrypt(ciphertext, passphrase);
+    return decrypted.toString(CryptoJS.enc.Utf8);
+  }
+
   function ratelimitSubmitNewDiary() {
     setTimeout(() => {
       submitState = 'idle';
@@ -120,7 +181,7 @@
     const diaryjson = await fetchres.json();
     diaries = diaryjson.diaries;
 
-    if (diaries.length == 0) {
+    if (!diaries || diaries.length == 0) {
       noDiaries = true;
     }
 
@@ -135,8 +196,10 @@
 
       if (encryption == 'none') {
         diaries[i].encrypted = false;
+        diaries[i].localencrypted = false;
       } else {
         diaries[i].encrypted = true;
+        diaries[i].localencrypted = true;
       }
 
       diaries[i].datestring = DateTime.fromISO(date).toFormat('ccc, d. LLLL yyyy');
@@ -174,9 +237,15 @@
                   {/each}
                 </div>
               </div>
-              <div class="d-cont">
-                <p class="prewrap">{diary.content}</p>
-              </div>
+              {#if !diary.localencrypted}
+                <div class="d-cont">
+                  <p class="prewrap">{diary.content}</p>
+                </div>
+              {:else}
+                <div class="encrypted-info">
+                  <p class="encrypted-diary-text roboto">Decrypt to see | {diary.encryption}</p>
+                </div>
+              {/if}
             </div>
           </div>
           <div class="interactions">
@@ -228,9 +297,22 @@
     </div>
     <div class="action-buttons">
       <button class="create-button roboto" on:click={() => (showCreateDiaryModal = true)}>New Diary</button>
+      <button class="decrypt-button roboto" on:click={() => (showDecryptModal = true)}>Decrypt Diaries</button>
     </div>
   </div>
 </UserPageLayout>
+
+<CustomModal bind:showModal={showDecryptModal} width={'18'} height={'18'}>
+  <div class="flex-col">
+    {#if decError}
+      <div class="dec-error-div">
+        <p class="inv-dec-msg small-error-msg roboto">Key cannot be empty</p>
+      </div>
+    {/if}
+    <input class="dec-key-input roboto" bind:value={dec_key} placeholder="Decryption Key" />
+    <button class="dec-button roboto" on:click={decrypt}>Decrypt</button>
+  </div>
+</CustomModal>
 
 <FullModal bind:showModal={showCreateDiaryModal}>
   <p class="new-entry-title roboto">New Diary Entry</p>
@@ -340,6 +422,11 @@
   .flex {
     display: flex;
     justify-content: space-between;
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
   }
 
   .dir-flex {
@@ -593,13 +680,44 @@
     cursor: pointer;
   }
 
+  .encrypted-info {
+    height: 5.2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .encrypted-diary-text {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2rem !important;
+    margin-top: -1.8rem;
+    color: rgb(48, 117, 255) !important;
+  }
+
+  .decrypt-button {
+    position: fixed;
+    margin-top: 13vh;
+    width: 12vw;
+    height: 5vh;
+    background-color: rgb(48, 117, 255);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .decrypt-button:active {
+    background-color: rgb(30, 80, 179);
+  }
+
   .create-button:active {
     background-color: rgb(2, 172, 2);
   }
 
   .diary-entry {
     color: white;
-    padding: 0.2vw;
+    padding-top: 0.5vw;
+    padding-bottom: 0.5vw;
     padding-left: 1vw;
     padding-right: 1vw;
     background-color: rgb(32, 32, 44);
@@ -637,6 +755,46 @@
     margin-right: 2vw;
     max-height: 90vh;
     overflow-y: auto;
+  }
+
+  .dec-button {
+    background-color: rgb(48, 117, 255);
+    width: 12.5rem;
+    height: 2.5rem;
+    margin-top: 0.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.5vw;
+  }
+
+  .dec-button:active {
+    background-color: rgb(30, 80, 179);
+  }
+
+  .inv-dec-msg {
+    margin-top: 0.65rem;
+  }
+
+  .dec-error-div {
+    width: 12.5rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .dec-key-input {
+    color: white;
+    background-color: rgb(32, 32, 32);
+    font-size: 1rem;
+    width: 12.5rem;
+    height: 2.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2.1rem;
+    border-style: solid;
+    border-radius: 0.3vw;
+    border-color: rgb(48, 117, 255);
+    border-width: 0.15vw;
+    padding-left: 0.4vw;
   }
 
   .roboto {

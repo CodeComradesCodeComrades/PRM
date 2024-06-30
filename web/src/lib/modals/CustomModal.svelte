@@ -21,7 +21,7 @@
   style={`width: ${width}vw; height: ${height}vh;`}
 >
   {#if showCloseButton}
-    <div class="absolute top-2 right-4">
+    <div class="absolute top-1 right-2">
       <button class="text-white text-2xl" on:click={() => dialog.close()}>✕</button>
     </div>
   {/if}
@@ -36,7 +36,7 @@
     border-width: 1px;
     border-color: rgb(82, 82, 82);
     background-color: rgb(10, 10, 10);
-    border-radius: 4px;
+    border-radius: 12px;
   }
 
   dialog::backdrop {

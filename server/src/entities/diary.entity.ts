@@ -38,5 +38,8 @@ export class DiaryEntity {
     updatedAt!: Date;
 
     @Column({ type: 'varchar', default: DiaryEncryption.NONE })
-    encryption: DiaryEncryption;
+    encryption!: DiaryEncryption;
+
+    @Column()
+    checksum!: string;
 }
