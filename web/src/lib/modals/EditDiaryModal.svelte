@@ -1,4 +1,6 @@
 <script>
+  import CryptoJS from 'crypto-js';
+
   import FullModal from '$lib/modals/FullModal.svelte';
   import { env } from '$env/dynamic/public';
   import { createEventDispatcher } from 'svelte';
@@ -65,11 +67,14 @@
       final_enc_algo = editDiary.encryption;
     }
 
+    var checksum = await CryptoJS.SHA256(editDiary.content).toString(CryptoJS.enc.Hex);
+
     var submitBody = JSON.stringify({
       content: editDiary.content,
       date: editDiary.date,
       rating: editDiary.rating,
       encryption: final_enc_algo,
+      checksum: checksum,
     });
 
     const editfetch = await fetch(hosturl + '/api/diary/' + orig_date, {
