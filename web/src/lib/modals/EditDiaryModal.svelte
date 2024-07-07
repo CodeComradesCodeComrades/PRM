@@ -41,7 +41,14 @@
     orig_date = editDiary.date;
   }
 
+  function encryptAES(text, passphrase) {
+    const encrypted = CryptoJS.AES.encrypt(text, passphrase);
+    return encrypted.toString();
+  }
+
   async function submitEditDiary() {
+    var finalcontent = '';
+
     if (editDiary.encryption != 'none') {
       if (!enc_key || !enc_confirm_key) {
         submitState = 'no_key';
@@ -63,14 +70,18 @@
     let final_enc_algo = 'none';
     if (editDiary.encryption == 'none') {
       final_enc_algo = 'none';
+
+      finalcontent = editDiary.content;
     } else {
       final_enc_algo = editDiary.encryption;
+
+      if (final_enc_algo == 'AES') finalcontent = await encryptAES(editDiary.content, enc_key);
     }
 
     var checksum = await CryptoJS.SHA256(editDiary.content).toString(CryptoJS.enc.Hex);
 
     var submitBody = JSON.stringify({
-      content: editDiary.content,
+      content: finalcontent,
       date: editDiary.date,
       rating: editDiary.rating,
       encryption: final_enc_algo,
@@ -89,6 +100,10 @@
     if (editres.id) {
       showEditDiaryModal = false;
       dispatch('toggle');
+
+      editDiary.content = '';
+      editDiary.enc_key = '';
+      editDiary.enc_confirm_key = '';
     } else if (
       editres.message[0] == 'rating must not be less than 0.5' ||
       editres.message[0] == 'rating must not be greater than 10'

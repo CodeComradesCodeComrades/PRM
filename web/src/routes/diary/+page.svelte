@@ -252,8 +252,12 @@
             <button
               class="edit-button i-button"
               on:click={() => {
-                showEditDiaryModal = true;
-                editDiary = diary;
+                if (!diary.localencrypted) {
+                  showEditDiaryModal = true;
+                  editDiary = diary;
+                } else {
+                  showDecryptModal = true;
+                }
               }}
             >
               <svg
