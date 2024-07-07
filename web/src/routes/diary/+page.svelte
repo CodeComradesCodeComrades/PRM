@@ -8,6 +8,7 @@
   import FullModal from '$lib/modals/FullModal.svelte';
   import EditDiaryModal from '$lib/modals/EditDiaryModal.svelte';
   import CustomModal from '$lib/modals/CustomModal.svelte';
+  import ConfirmationPopup from '$lib/modals/ConfirmationPopup.svelte';
 
   const hosturl = env.SERVER_URL || '';
   let selectedStars = 3;
