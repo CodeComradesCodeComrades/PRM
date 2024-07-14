@@ -20,6 +20,7 @@
   let showCreateDiaryModal = false;
   let showEditDiaryModal = false;
   let showDecryptModal = false;
+  let showConfirmationPopup = false;
   var today = new Date();
   let enc_algo = 'None';
   let enc_key = '';
@@ -30,6 +31,7 @@
   let noDiaries;
   let editDiary;
   let decError = false;
+  let deletionTarget;
   let dec_key = '';
   /** SubmitStates:
    * idle: Nothing/Default
@@ -210,6 +212,36 @@
       return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
     });
   }
+
+  //Danger: Deletes a Diary!
+  async function handleConfirm() {
+    showConfirmationPopup = false;
+
+    var submitBody = JSON.stringify({
+      date: deletionTarget.date,
+    });
+
+    const delfetch = await fetch(hosturl + '/api/diary/' + deletionTarget.date, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: submitBody,
+    });
+
+    if (delfetch.ok) {
+      diaries = diaries.filter((diary) => diary.date !== deletionTarget.date);
+    } else if (delfetch.json().message[0] === 'Diary not found') {
+      console.log('failed to delete diary');
+    }
+
+    deletionTarget = '';
+  }
+
+  function handleCancel() {
+    showConfirmationPopup = false;
+    deletionTarget = '';
+  }
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -277,7 +309,13 @@
                 /><path d="M13.5 6.5l4 4" /></svg
               >
             </button>
-            <button class="delete-button i-button">
+            <button
+              on:click={() => {
+                deletionTarget = diary;
+                showConfirmationPopup = true;
+              }}
+              class="delete-button i-button"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -422,6 +460,13 @@
 </FullModal>
 
 <EditDiaryModal bind:showEditDiaryModal bind:editDiary on:toggle={fetchDiaries} />
+
+<ConfirmationPopup
+  bind:showPopup={showConfirmationPopup}
+  on:confirm={handleConfirm}
+  on:cancel={handleCancel}
+  description="Do you really want to delete this diary?"
+/>
 
 <style scoped>
   .flex {

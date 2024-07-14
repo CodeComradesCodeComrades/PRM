@@ -1,10 +1,12 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   export let showPopup = true;
   export let showCloseButton = true;
 
   export let description = '';
 
   let popup;
+  const dispatch = createEventDispatcher();
 
   $: if (popup && showPopup) {
     popup.showModal();
@@ -14,18 +16,12 @@
 
   const handleCancel = () => {
     popup.close();
-    const event = new CustomEvent('cancel', {
-      detail: { confirmed: false },
-    });
-    popup.dispatchEvent(event);
+    dispatch('cancel', { confirmed: false });
   };
 
   const handleConfirm = () => {
     popup.close();
-    const event = new CustomEvent('confirm', {
-      detail: { confirmed: true },
-    });
-    popup.dispatchEvent(event);
+    dispatch('confirm', { confirmed: true });
   };
 </script>
 
@@ -99,27 +95,27 @@
   .confirm-button {
     width: 8vw;
     height: 4.6vh;
-    background-color: rgb(48, 117, 255);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .confirm-button:active {
-    background-color: rgb(30, 80, 179);
-  }
-
-  .cancel-button {
-    width: 8vw;
-    height: 4.6vh;
     background-color: red;
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
 
-  .cancel-button:active {
+  .confirm-button:active {
     background-color: rgb(175, 0, 0);
+  }
+
+  .cancel-button {
+    width: 8vw;
+    height: 4.6vh;
+    background-color: rgb(48, 117, 255);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .cancel-button:active {
+    background-color: rgb(30, 80, 179);
   }
 
   .buttons {
