@@ -11,6 +11,22 @@
   } else if (popup && !showPopup) {
     popup.close();
   }
+
+  const handleCancel = () => {
+    popup.close();
+    const event = new CustomEvent('cancel', {
+      detail: { confirmed: false },
+    });
+    popup.dispatchEvent(event);
+  };
+
+  const handleConfirm = () => {
+    popup.close();
+    const event = new CustomEvent('confirm', {
+      detail: { confirmed: true },
+    });
+    popup.dispatchEvent(event);
+  };
 </script>
 
 <dialog class={`popup`} bind:this={popup} on:close={() => (showPopup = false)} style={`width: 20vw; height: 21vh;`}>
@@ -28,8 +44,8 @@
     <div>
       <p class="desc-text roboto">{description}</p>
       <div class="buttons">
-        <button class="cancel-button roboto">Cancel</button>
-        <button class="confirm-button roboto">Confirm</button>
+        <button class="cancel-button roboto" on:click={handleCancel}>Cancel</button>
+        <button class="confirm-button roboto" on:click={handleConfirm}>Confirm</button>
       </div>
     </div>
   </div>
