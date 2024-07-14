@@ -105,12 +105,12 @@
       editDiary.enc_key = '';
       editDiary.enc_confirm_key = '';
     } else if (
-      editres.message[0] == 'rating must not be less than 0.5' ||
-      editres.message[0] == 'rating must not be greater than 10'
+      editres.message == 'rating must not be less than 0.5' ||
+      editres.message == 'rating must not be greater than 10'
     ) {
       submitState = 'inv_rating';
       ratelimitEditDiary();
-    } else if (editres.message[0] == 'Failed to edit diary' || editres.message[0] == 'No changes made') {
+    } else if (editres.message == 'Failed to edit diary' || editres.message == 'no changes made') {
       submitState = 'failed_edit';
       ratelimitEditDiary();
     }
@@ -218,7 +218,7 @@
           <p class="inv-rating-error-msg small-error-msg roboto">Invalid rating</p>
         {/if}
         {#if submitState == 'failed_edit'}
-          <p class="failed-edit-error-msg small-error-msg roboto">No changes were found</p>
+          <p class="failed-edit-error-msg small-error-msg roboto">No changes were caused</p>
         {/if}
         <button
           on:click={submitEditDiary}
@@ -253,6 +253,7 @@
   }
 
   .failed-edit-error-msg {
+    margin-top: 5.4rem !important;
   }
 
   .small-error-msg {

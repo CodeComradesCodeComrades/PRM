@@ -32,8 +32,15 @@ export class DiaryRepository implements IDiaryRepository {
     }
 
     async update(diary: Partial<DiaryEntity>): Promise<DiaryEntity> {
-        await this.diaryRepository.update(diary.id, diary);
-        return this.diaryRepository.findOneOrFail({ where: { id: diary.id } });
+        const { id, updatedAt, ...updatedFields } = diary; // Exclude updatedAt from updates
+
+        if (Object.keys(updatedFields).length === 0) {
+            return this.diaryRepository.findOneOrFail({ where: { id } });
+        }
+
+        await this.diaryRepository.update(diary.id, updatedFields);
+
+        return this.diaryRepository.findOneOrFail({ where: { id } });
     }
 
     async delete(id: string): Promise<void> {

@@ -25,7 +25,20 @@ export class DiaryService {
         let diary = await this.diaryRepository.getByDateAndUser(date, auth.user);
         if (!diary) throw new BadRequestException('Diary not found');
 
-        return mapDiary(await this.diaryRepository.update({ id: diary.id, ...dto }));
+        const originalDiary = { ...diary };
+        let changesDetected = false;
+
+        for (const key in dto) {
+            if (originalDiary[key] !== dto[key]) {
+                changesDetected = true;
+                break;
+            }
+        }
+
+        if (!changesDetected) throw new BadRequestException('no changes made')
+        diary = await this.diaryRepository.update({ id: diary.id, ...dto });
+
+        return mapDiary(diary);
     }
 
     async get(auth: AuthDto, date: string) {
